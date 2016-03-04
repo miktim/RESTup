@@ -5,7 +5,7 @@ Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible
 Package contains:
 
 RESTup\RESTup RESTful java server v1.3.pdf  ; documentation (sorry me - Russian only)
-RESTup\RESTupServer.jar                     ; contains source 
+RESTup\RESTupServer.jar                     ; server (source inside) 
 RESTup\ServerStart.bat                      ; starting script for Windows
 RESTup\ServerStart.sh                       ; starting script for Linux
 RESTup\Linux\                               ; config & examples for linux                           
