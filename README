@@ -1,0 +1,23 @@
+# RESTup
+RESTful java server of console applications
+
+Lightweight pure JavaSE/6 server provides a RESTful API and experimental WebDAV-based UI to the console applications.
+Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API.
+
+Package contains:
+
+\RESTup RESTful java server v1.3.pdf  ; documentation (sorry me - Russian only)
+\RESTupServer.jar                     ; server (source inside) 
+\ServerStart.bat                      ; starting script for Windows
+\ServerStart.sh                       ; starting script for Linux
+\Linux\                               ; config & examples for linux                           
+\Linux\Echo.sh                        
+\Linux\Office2x.sh
+\Linux\RESTupConfig.xml
+\Linux\Tesseract-OCR.sh
+\Windows\                             ; config & examples for Windows
+\Windows\CheckPFR.js
+\Windows\Office2x.js
+\Windows\RESTupConfig.xml
+\Windows\Tesseract-OCR.js
+\Oracle\restup_web_server.sql         ; Oracle client
