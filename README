@@ -1,4 +1,4 @@
-# RESTup
+# RESTup v1.3a.51229
 RESTful java server of console applications
 
 Lightweight pure JavaSE/6 server provides a RESTful API and experimental WebDAV-based UI to the console applications.
@@ -20,4 +20,4 @@ Package contains:
 \Windows\Office2x.js
 \Windows\RESTupConfig.xml
 \Windows\Tesseract-OCR.js
-\Oracle\restup_web_server.sql         ; Oracle client
+\Oracle\restup_web_server.sql         ; client for Oracle
