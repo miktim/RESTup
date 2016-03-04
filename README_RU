@@ -1,3 +1,5 @@
+# RESTup v1.3a.51229
+RESTful java server of console applications
 
 Легкий javaSE/6 сервер, обеспечивает RESTful WEB API к консольным приложениям операционной системы. 
 Сервер имеет экспериментальный пользовательский интерфейс на основе протокола WebDAV. В составе пакета
@@ -18,4 +20,4 @@ Oracle-XE-совместимый интерфейс:
 /Windows/Office2x.js
 /Windows/RESTupConfig.xml
 /Windows/Tesseract-OCR.js
-/Oracle/restup_web_server.sql         ; клиент Oracle
+/Oracle/restup_web_server.sql         ; клиент из Oracle
