@@ -11,13 +11,12 @@ Package contains:
 \ServerStart.bat                      ; starting script for Windows
 \ServerStart.sh                       ; starting script for Linux
 \Linux\                               ; config & examples for linux                           
-\Linux\Echo.sh                        
-\Linux\Office2x.sh
-\Linux\RESTupConfig.xml
-\Linux\Tesseract-OCR.sh
+\Linux\Echo.sh                        ; echo service
+\Linux\Office2x.sh                    ; transform office files
+\Linux\RESTupConfig.xml             
+\Linux\Tesseract-OCR.sh               
 \Windows\                             ; config & examples for Windows
-\Windows\CheckPFR.js
-\Windows\Office2x.js
+\Windows\Office2x.js 
 \Windows\RESTupConfig.xml
 \Windows\Tesseract-OCR.js
 \Oracle\restup_web_server.sql         ; client for Oracle
