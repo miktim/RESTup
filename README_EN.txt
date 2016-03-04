@@ -4,18 +4,18 @@ Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible
 
 Package contains:
 
-RESTup\RESTup RESTful java server v1.3.pdf  ; documentation (sorry me - Russian only)
-RESTup\RESTupServer.jar                     ; server (source inside) 
-RESTup\ServerStart.bat                      ; starting script for Windows
-RESTup\ServerStart.sh                       ; starting script for Linux
-RESTup\Linux\                               ; config & examples for linux                           
-RESTup\Linux\Echo.sh                        
-RESTup\Linux\Office2x.sh
-RESTup\Linux\RESTupConfig.xml
-RESTup\Linux\Tesseract-OCR.sh
-RESTup\Windows\                             ; config & examples for Windows
-RESTup\Windows\CheckPFR.js
-RESTup\Windows\Office2x.js
-RESTup\Windows\RESTupConfig.xml
-RESTup\Windows\Tesseract-OCR.js
-RESTup\Oracle\restup_web_server.sql         ; Oracle client
+\RESTup RESTful java server v1.3.pdf  ; documentation (sorry me - Russian only)
+\RESTupServer.jar                     ; server (source inside) 
+\ServerStart.bat                      ; starting script for Windows
+\ServerStart.sh                       ; starting script for Linux
+\Linux\                               ; config & examples for linux                           
+\Linux\Echo.sh                        
+\Linux\Office2x.sh
+\Linux\RESTupConfig.xml
+\Linux\Tesseract-OCR.sh
+\Windows\                             ; config & examples for Windows
+\Windows\CheckPFR.js
+\Windows\Office2x.js
+\Windows\RESTupConfig.xml
+\Windows\Tesseract-OCR.js
+\Oracle\restup_web_server.sql         ; Oracle client
