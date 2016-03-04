@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="Windows-1251" ?>
+<!-- 
+RESTup 1.3 RESTful сервер консольных приложений 
+2014-2015 miktim@mail.ru 
+
+Скрипты запускаются из текущего каталога
+
+ИМЕНА АТРИБУТОВ РЕГИСТРОЗАВИСИМЫ
+
+Атрибуты сервера:
+port      порт листенера [80]
+spoolDir  папка для хранения файлов заданий [<каталог временных файлов>\restup_spool]
+maxJobsStarted количество одновременно запущенных внешних команд [2]
+jobsLifeTime   время жизни заданий с момента создания [240] сек
+debugLevel     уровень отладки [1] 0,1,2
+
+Атрибуты сервиса:
+name        уникальное имя [!]
+fileExts    разрешенные расширения файлов, разделенные запятой [любое]
+debug	    отладка внешней команды (off) on|off
+jobCommand  внешняя команда [!]
+jobDefaults параметр внешней команды по-умолчанию 
+jobQuota  максимальный размер файла (файлов) задания [0] байт
+commandTimeout  предельное время исполнения внешней команды [60] сек
+-->
+<server spoolDir="" maxJobsStarted="2" jobsLifeTime="240" debugLevel="2">
+<service name="Office2MSO97" debug="on" fileExts="DOCX,ODT,XLSX,ODS,PPTX,ODP" jobCommand="cscript /nologo Office2x.js %inFilesDir% %outFilesDir% mso97" jobQuota="">
+Преобразовать офисные документы в формат MS Office 97/2000.
+</service>
+<service name="Office2OOXML" debug="on" fileExts="DOC,ODT,XLS,ODS,PPT,ODP" jobCommand="cscript /nologo Office2x.js %inFilesDir% %outFilesDir% ooxml" >
+Преобразовать офисные документы в формат MS Office 2007 (OOXML)
+</service>
+<service name="Office2PDF" debug="on" fileExts="DOCX,DOC,ODT,XLSX,XLS,ODS,PPTX,PPT,ODP" jobCommand="cscript /nologo Office2x.js %inFilesDir% %outFilesDir% pdf" jobQuota="2000000">
+Преобразовать офисные документы в Adobe pdf
+</service>
+<service name="Office2HTML" debug="on" fileExts="DOCX,DOC,ODT,XLSX,XLS,ODS,PPTX,PPT,ODP" jobCommand="cscript /nologo Office2x.js %inFilesDir% %outFilesDir% html">
+Преобразовать офисные документы в html
+</service>
+<service name="Tesseract-OCR" debug="on" fileExts="TIF,TIFF,JPG" jobDefaults="rus" jobCommand="cscript /nologo Tesseract-OCR.js %inFilesDir% %outFilesDir% %jobParams%" commandTimeout="70">
+Оптический распознаватель символов Tesseract. 
+Файл распознаваемого изображения должен иметь правильную ориентацию: 
+строки текста горизонтальны. 
+Возвращает текстовый файл в кодировке UTF-8.
+Параметр: eng | deu | swe | fin | rus определяет язык распознаваемого изображения.
+</service>
+<service name="CheckPFR" debug="on" fileExts="ZIP,XML" jobCommand="cscript /nologo CheckPFR.js %inFilesDir% %outFilesDir% " jobQuota="16000000" commandTimeout="70">
+Программа форматно-логического контроля обменных файлов ПФР.
+Может принять пакет XML-файлов, упакованный в ZIP-архив. 
+Возвращает файлы-протоколы контроля в соответствии с документацией.
+</service>
+<service name="Echo" fileExts="" debug="on" jobCommand="CMD /C xcopy %inFilesDir%%jobParams% %outFilesDir% /E/Y/Q" jobDefaults="*.*" jobQuota="160000" commandTimeout="20">
+Эхо-сервис. Возвращает файл(ы) задания по маске, передаваемой в качестве параметра.
+</service>
+<!--
+WebDAV интерфейс.
+sessionTimeout	таймаут пользовательской сессии sec (=jobsLifeTime)
+sessionQuota	ограничение совокупного размера пользовательских файлов байт (2GiB)
+-->
+<davInterface sessionTimeout="" sessionQuota="">
+<folder uri="/transform/office/mso97" serviceName="Office2MSO97" jobDefaults="">
+Преобразовать офисные документы в формат MS Office 97/2000.
+</folder>
+<folder uri="/transform/office/ooxml" serviceName="Office2OOXML" jobDefaults="">
+Преобразовать офисные документы в формат MS Office 2007 (OOXML)
+</folder>
+<folder uri="/transform/office/pdf" serviceName="Office2PDF" jobDefaults="">
+Преобразовать офисные документы в Adobe pdf
+</folder>
+<folder uri="/transform/office/html" serviceName="Office2HTML" jobDefaults="">
+Преобразовать офисные документы в html
+</folder>
+<folder uri="/transform/tesseract-ocr">
+Оптический распознаватель символов Tesseract.
+Файл распознаваемого изображения должен иметь правильную ориентацию: 
+строки текста горизонтальны. Возвращает текстовый файл в кодировке UTF-8.
+</folder>
+<folder uri="/transform/tesseract-ocr/rus" serviceName="Tesseract-OCR" jobDefaults="rus"/>
+<folder uri="/transform/tesseract-ocr/eng" serviceName="Tesseract-OCR" jobDefaults="eng"/>
+<folder uri="/transform/tesseract-ocr/fin" serviceName="Tesseract-OCR" jobDefaults="fin"/>
+<folder uri="/transform/tesseract-ocr/deu" serviceName="Tesseract-OCR" jobDefaults="deu"/>
+<folder uri="/check/echo" serviceName="Echo">Отладочный эхо-сервис.</folder>
+<folder uri="/check/checkPFR" serviceName="CheckPFR">
+Программа форматно-логического контроля обменных файлов ПФР.
+Может принять пакет XML-файлов, упакованный в ZIP-архив. 
+Возвращает файлы-протоколы контроля в соответствии с документацией.
+</folder>
+</davInterface>
+</server>
