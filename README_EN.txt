@@ -1,5 +1,5 @@
 
-Lightweight pure JavaSE/6 server provides a RESTful API and experimental WebDAV-based UI the console applications.
+Lightweight pure JavaSE/6 server provides a RESTful API and experimental WebDAV-based UI to the console applications.
 Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API.
 
 Package RESTup.v1.3a.zip contains:
