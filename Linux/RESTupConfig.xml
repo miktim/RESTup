@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+RESTup 1.3 конфигурационный файл Linux
+2015.12.12
+(с) 2014-2015, miktim@mail.ru 
+
+ИМЕНА АТРИБУТОВ РЕГИСТРОЗАВИСИМЫ
+
+Атрибуты сервера:
+port        порт листенера [80]
+spoolDir    папка для хранения файлов заданий [/restup_spool каталога временных файлов]
+maxJobsStarted количество одновременно запущенных внешних команд [2]
+jobsLifeTime   время жизни заданий с момента создания [240] сек
+debugLevel     0|1|2 [1]
+
+Атрибуты сервиса:
+name        уникальное имя [!]
+debug       вывод отладочной информации [off] on | off
+fileExts    разрешенные расширения файлов, разделенные запятой [любое]
+jobCommand  внешняя команда [!]
+jobDefaults параметр внешней команды по-умолчанию 
+jobQuota    максимальный размер файлов задания [без ограничений] байт
+commandTimeout  предельное время исполнения внешней команды [60] сек
+-->
+<server spoolDir="" port="8080" debugLevel="2" maxJobsStarted="2" jobsLifeTime="240" >
+<service name="Office2MSO97" debug="on" fileExts="DOCX,ODT,XLSX,ODS,PPTX,ODP,HTML" jobCommand="sh Office2x.sh %inFilesDir% %outFilesDir% mso97" jobQuota="">
+Преобразовать офисные документы в формат MS Office 97/2000.
+</service>
+<service name="Office2OOXML" debug="on" fileExts="DOC,ODT,XLS,ODS,PPT,ODP,HTML" jobCommand="sh Office2x.sh %inFilesDir% %outFilesDir% ooxml" >
+Преобразовать офисные документы в формат MS Office 2007 (OOXML)
+</service>
+<service name="Office2PDF" debug="on" fileExts="DOCX,DOC,ODT,XLSX,XLS,ODS,PPTX,PPT,ODP,HTML" jobCommand="sh Office2x.sh %inFilesDir% %outFilesDir% pdf" jobQuota="2000000">
+Преобразовать офисные документы в Adobe pdf
+</service>
+<service name="Office2HTML" debug="on" fileExts="DOCX,DOC,ODT,XLSX,XLS,ODS,PPTX,PPT,ODP" jobCommand="sh Office2x.sh %inFilesDir% %outFilesDir% HTML" jobQuota="">
+Преобразовать офисные документы в html
+</service>
+<service name="Tesseract-OCR" debug="on"  fileExts="TIF,TIFF,JPG" jobDefaults="rus" jobCommand="sh Tesseract-OCR.sh %inFilesDir% %outFilesDir% %jobParams%" jobQuota="" commandTimeout="70">
+Оптический распознаватель символов Tesseract.
+Файл распознаваемого изображения должен иметь правильную ориентацию: 
+строки текста горизонтальны. 
+Возвращает текстовый файл в кодировке UTF-8.
+Параметр: eng | deu | swe | fin | rus определяет язык распознаваемого изображения.
+</service>
+<service name="Echo" debug="on" fileExts="" jobCommand="sh Echo.sh %inFilesDir%%jobParams% %outFilesDir%" jobDefaults="*" jobQuota="5000000" commandTimeout="20">
+Эхо-сервис. Возвращает файл(ы) задания по маске, передаваемой в качестве параметра.
+</service>
+<!--
+WebDAV интерфейс.
+sessionTimeout	таймаут пользовательской сессии sec (=jobsLifeTime)
+sessionQuota	ограничение совокупного размера пользовательских файлов байт (2GiB)
+-->
+<davInterface sessionTimeout="" sessionQuota="">
+<folder uri="/transform/office/mso97" serviceName="Office2MSO97" jobDefaults="">
+Преобразовать офисные документы в формат MS Office 97/2000.
+</folder>
+<folder uri="/transform/office/ooxml" serviceName="Office2OOXML" jobDefaults="">
+Преобразовать офисные документы в формат MS Office 2007 (OOXML)
+</folder>
+<folder uri="/transform/office/pdf" serviceName="Office2PDF" jobDefaults="">
+Преобразовать офисные документы в Adobe pdf
+</folder>
+<folder uri="/transform/office/html" serviceName="Office2HTML" jobDefaults="">
+Преобразовать офисные документы в html
+</folder>
+<folder uri="/transform/tesseract-ocr">
+Оптический распознаватель символов Tesseract.
+Файл распознаваемого изображения должен иметь правильную ориентацию: 
+строки текста горизонтальны. Возвращает текстовый файл в кодировке UTF-8.
+</folder>
+<folder uri="/transform/tesseract-ocr/rus" serviceName="Tesseract-OCR" jobDefaults="rus"/>
+<folder uri="/transform/tesseract-ocr/eng" serviceName="Tesseract-OCR" jobDefaults="eng"/>
+<folder uri="/transform/tesseract-ocr/fin" serviceName="Tesseract-OCR" jobDefaults="fin"/>
+<folder uri="/transform/tesseract-ocr/deu" serviceName="Tesseract-OCR" jobDefaults="deu"/>
+<folder uri="/echo" serviceName="Echo">Тестовый эхо-сервис.</folder>
+</davInterface>
+</server>
