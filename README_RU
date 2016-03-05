@@ -21,3 +21,6 @@ Oracle (XE-совместимый):
 /Windows/RESTupConfig.xml
 /Windows/Tesseract-OCR.js
 /Oracle/restup_web_server.sql         ; клиент для Oracle
+/Source/RESTupServer.java
+/Source/build.bat                     ; compile & build script
+/Source/Help.txt                      ; шаблон справки WebDAV интерфейса
