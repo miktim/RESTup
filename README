@@ -10,7 +10,7 @@ Package contains:
 \RESTupServer.jar                     ; server (source inside) 
 \ServerStart.bat                      ; starting script for Windows
 \ServerStart.sh                       ; starting script for Linux
-\Linux\                               ; config & examples for linux                           
+\Linux\                               ; config & examples for Linux                           
 \Linux\Echo.sh                        ; echo service
 \Linux\Office2x.sh                    ; transform office files
 \Linux\RESTupConfig.xml             
