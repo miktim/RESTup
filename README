@@ -2,7 +2,8 @@
 RESTful java server of console applications
 
 Lightweight pure JavaSE/6 server provides a RESTful API to the console applications. Server has an experimental WebDAV-based UI. 
-Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API.
+Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API. 
+The examples require installed LibreOffice 4.x (soffice.exe) & Tesseract OCR. 
 
 Package contains:
 
