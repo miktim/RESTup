@@ -1,4 +1,4 @@
-echo [Usage: jbuild.bat <java_file_name_without_extension>]
+rem Usage: build <java_file_name_without_extension>
 set jname=%1
 if [%1]==[] set jname=RESTupServer
 if NOT exist .\classes\ md .\classes
