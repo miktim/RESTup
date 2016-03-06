@@ -7,7 +7,7 @@ Oracle (XE-совместимый). Примеры требуют предвар
 
 Состав пакета:
 
-/RESTup RESTful java server v1.3.pdf  ; документация
+/RESTup-RESTful_application_server_v1.3.pdf  ; документация
 /RESTupServer.jar                     ; сервер
 /ServerStart.bat                      ; скрипт запуска Windows
 /ServerStart.sh                       ; скрипт запуска Linux
