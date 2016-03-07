@@ -2,7 +2,7 @@
 
 Lightweight pure JavaSE/6 server provides a RESTful API to the console applications. Server has an experimental WebDAV-based UI. 
 Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API. 
-The examples require installed LibreOffice (4.x for Windows) & Tesseract OCR. 
+Examples require installed LibreOffice (4.x for Windows) & Tesseract OCR. 
 
 Package contains:
 
@@ -23,3 +23,4 @@ Package contains:
 \Source\RESTupServer.java
 \Source\build.bat                     ; compile & build script
 \Source\Help.txt                      ; help template for WebDAV users
+
