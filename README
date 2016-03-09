@@ -1,6 +1,7 @@
 # RESTup v1.3a.51230
 
-Lightweight pure JavaSE/6 server provides a RESTful API to the console applications (hereinafter - services). 
+Lightweight pure JavaSE/6 server provides a RESTful API to the console applications 
+(hereinafter - services). 
 Interaction with the server is performed according to the following General scheme:
 - get a list of services (GET), to determine the URI of the service;
 - create a job (POST) to selected service, to get the URI for the input files;
@@ -9,6 +10,7 @@ Interaction with the server is performed according to the following General sche
 - get a list of result files (GET);
 - get result file(s) (GET);
 - delete the job and associated files (DELETE).
+
 Server has an experimental WebDAV-based UI. An interface is a set of remote folders associated
 with the corresponding service. The service contains subfolders for input and output files.
 UI can be accesed via WebDAV clients: Windows Explorer, Gnome Nautilus etc.
