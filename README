@@ -14,7 +14,7 @@ with the corresponding service. The service contains subfolders for input and ou
 UI can be accesed via WebDAV clients: Windows Explorer, Gnome Nautilus etc.
 
 Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API. 
-Examples require installed LibreOffice (4.x for Windows) & Tesseract OCR. 
+Examples require installed LibreOffice (4.x for Windows platform) & Tesseract OCR. 
 
 Package contains:
 
