@@ -4,7 +4,7 @@ Lightweight pure JavaSE/6 server provides a RESTful API to the console applicati
 (hereinafter - services). 
 Interaction with the server is performed according to the following General scheme:
 - get a list of services (GET), to determine the URI of the service;
-- create a job (POST) to selected service, to get the URI for the input files;
+- create a job to selected service (POST), to get the URI for the input files;
 - send file(s) for the job (PUT);
 - execute parameterized job (POST), to get the URI of the result files;
 - get a list of result files (GET);
@@ -12,7 +12,7 @@ Interaction with the server is performed according to the following General sche
 - delete the job and associated files (DELETE).
 
 Server has an experimental WebDAV-based UI. An interface is a set of remote folders associated
-with the corresponding service. The service contains subfolders for input and output files.
+with corresponding services. The service folder contains subfolders for input and output files.
 UI can be accesed via WebDAV clients: Windows Explorer, Gnome Nautilus etc.
 
 Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API. 
