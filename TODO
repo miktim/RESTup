@@ -1,6 +1,9 @@
 - correct html error reason phrases according RFC;
 - noop instead error when no jobfiles and jobQuota > 0;
 - take temporary dir from environment vars ($TMPDIR %TEMP%);
-- ?spaces in paths;
-- create build.sh, correct build.bat;
-- ?catch and explain init port exceptions (Security, Busy);
+- spaces in paths (?);
+- catch and explain init port exceptions (Security, Busy);
+- DAV: replace 404 with 410 Gone (?);
+- Log: decode external programs STDERR according consoleEncoding;
+- Config: add multipliers (Kilo, Mega, Giga) to jobQuota, (Minutes) to jobsLifeTime, jobTimeOut values; 
+- add build.sh, correct build.bat.
