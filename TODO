@@ -1,6 +1,6 @@
-- [ ] correct html error reason phrases according RFC
-- [ ] noop when no jobfiles and jobQuota > 0
-- [ ] take temporary dir from environment vars ($TMPDIR %TEMP%)
-- [ ] ?spaces in paths
-- [ ] create build.sh, correct build.bat
-- [ ] ?catch and explain init port exceptions (Security, Busy)
+- correct html error reason phrases according RFC;
+- noop instead error when no jobfiles and jobQuota > 0;
+- take temporary dir from environment vars ($TMPDIR %TEMP%);
+- ?spaces in paths;
+- create build.sh, correct build.bat;
+- ?catch and explain init port exceptions (Security, Busy);
