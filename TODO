@@ -6,4 +6,4 @@
 - DAV: replace 404 with 410 Gone (?);
 - Log: decode external programs STDERR according consoleEncoding;
 - Config: add multipliers (Kilo, Mega, Giga) to jobQuota, (Minutes) to jobsLifeTime, jobTimeOut values; 
-- add build.sh, correct build.bat.
++ add build.sh, correct build.bat.
