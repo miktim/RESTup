@@ -36,5 +36,6 @@ Package contains:
 \Oracle\restup_web_server.sql         ; client for Oracle
 \Source\RESTupServer.java
 \Source\build.bat                     ; compile & build script
+\Source\build.sh                      ; compile & build script
 \Source\Help.txt                      ; help template for WebDAV users
 
