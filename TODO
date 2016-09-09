@@ -1,6 +1,6 @@
 +  correct html error reason phrases according RFC;
 +  noop instead error when no jobfiles and jobQuota > 0;
-+  take temporary dir from environment vars ($TMPDIR %TEMP%);
++  take WindowsXP short path from environment var %TEMP%;
 +- spaces in paths (?);
 -  catch and explain init port exceptions (Security, Busy);
 -  DAV: replace 404 with 410 Gone (?);
