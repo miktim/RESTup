@@ -1,4 +1,4 @@
-# RESTup v1.3a.51230
+# RESTup v1.3
 
 Легкий javaSE/6 сервер, обеспечивает RESTful WEB API к консольным приложениям операционной системы. 
 Сервер имеет экспериментальный пользовательский интерфейс на основе протокола WebDAV. В составе пакета
@@ -24,5 +24,6 @@ Oracle (XE-совместимый). Примеры требуют предвар
 /Oracle/restup_web_server.sql         ; клиент для Oracle
 /Source/RESTupServer.java
 /Source/build.bat                     ; compile & build script
+/Source/build.sh                      ; compile & build script
 /Source/Help.txt                      ; шаблон справки WebDAV интерфейса
 
