@@ -3,14 +3,14 @@
  * RESTupServer RESTful сервер консольных приложений
  * Версия:	1.3.0
  * Автор:	miktim@mail.ru
- * Дата: 	2015.12.16
+ * Дата: 	2016.09.10
  * Изменения:
  * 2015 дополнено DAV-интерфейсом, переработано под влиянием Joshua Bloch и Steven McConnel
  * 2014 java реализация под впечатлением http://habrahabr.ru/post/69136/ и James Gosling, Ken Arnold
  * 2013 идея, RESTful интерфейс
  *
  * Лицензионное соглашение:
- * (c) 2013-2015 miktim@mail
+ * (c) 2013-2016 miktim@mail
  * Использование изделия регулируется лицензией MIT 
  */
 
@@ -18,6 +18,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.NetworkInterface;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 //import java.net.URI;
@@ -394,7 +395,7 @@ public class RESTupServer {
                 try {
 		    listener.removeHttpInvocation();
 //		    this.socket.getInputStream().skip(Long.MAX_VALUE);
-		    this.socket.shutdownInput();
+		    this.socket.shutdownInput(); //?
                     this.socket.close();
                 } catch (Throwable th) {
 //		    th.printStackTrace();
@@ -553,14 +554,14 @@ public class RESTupServer {
 	}
     }
 //
-	public static String getFileExtension(File file) {
-	    String name = file.getName();
-	    try {
-	        return name.substring(name.lastIndexOf(".") + 1);
-	    } catch (Exception e) {
-	        return null;
-	    }
+    public static String getFileExtension(File file) {
+	String name = file.getName();
+	try {
+	    return name.substring(name.lastIndexOf(".") + 1);
+	} catch (Exception e) {
+	    return null;
 	}
+    }
 //
     interface Executor {
  	void execute(HttpRequest rq, HttpResponse rs, FServer s) throws Throwable;
@@ -578,7 +579,7 @@ public class RESTupServer {
 
 //
     class FServer {
-	public static final String SERVER_VERSION = "RESTup/1.3.0.51230";
+	public static final String SERVER_VERSION = "RESTup/1.3.0.60910";
 	public static final String SERVER_ROOT = "/restup";
 /**
  *  Расширение класса листенера методом обслуживания http-запросов сервера
@@ -756,52 +757,43 @@ public class RESTupServer {
 // FServer Constructor
 //
 	FServer() throws Throwable {
-//
-	   String hostName = "";
-	// http://stackoverflow.com/questions/7348711/recommended-way-to-get-hostname-in-java
-	    try {
-		hostName = InetAddress.getLocalHost().getHostName();
-//   		hostName = Inet4Address.getLocalHost().getCanonicalHostName();
-	// проверим, что получилось
-		InetAddress.getByName(hostName);
-	    } catch (Throwable te) {
-    	// failed;  try alternate means.
-//		hostName = "";
+	    String spoolDirName = "restup_spool";
+	// определить папку %temp% по переменным окружения
+	    if (System.getenv("TEMP") != null) {
+	    	this.spoolDir = new File(System.getenv("TEMP"));  // Windows
+	    } else {
+	// определить папку %temp% по временному файлу
+	    	File tmpFile = File.createTempFile(spoolDirName,null);
+		this.spoolDir = tmpFile.getParentFile();
+	    	tmpFile.delete();	// удалить временный файл
 	    }
-	// try environment properties.
-            if (hostName == null || hostName.isEmpty()) 
-                hostName = Inet4Address.getLocalHost().getHostAddress();
-            if (hostName == null || hostName.isEmpty()) 
-		hostName = System.getenv("COMPUTERNAME");
-            if (hostName == null || hostName.isEmpty()) 
-		hostName = System.getenv("HOSTNAME");
-
-	    File selfDir = new File(System.getProperty("user.dir")
-		+ File.separator);
-
-	// определить %temp% по временному файлу  (java6)
-	    File tmpFile = File.createTempFile("restup_spool",null); 
-	    this.spoolDir = (new File(
-	    	tmpFile.getParentFile(),
-		File.separator + "restup_spool" + File.separator));
-	    tmpFile.delete();	// удалить временный файл
+	    this.spoolDir = new File(this.spoolDir, File.separator + spoolDirName + File.separator);
 	// http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
-//	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//	    Document doc = dBuilder.parse(new File(selfDir,"RESTupConfig.xml"));
+            Element eRoot = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+		.parse(new File("RESTupConfig.xml")).getDocumentElement(); // config from working dir
 	//optional, but recommended :
 	//  http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-//	    Element eRoot = doc.getDocumentElement().normalize();
-
-            Element eRoot = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-		.parse(new File(selfDir,"RESTupConfig.xml")).getDocumentElement();
 	    eRoot.normalize();
 	    this.parseCfg(eRoot);
-	    this.spoolDir = this.spoolDir.getCanonicalFile();
+//	    this.spoolDir = this.spoolDir.getCanonicalFile();
+	//
+	    System.out.println("NetworkInterfaces:"); 
+	    Enumeration ei = NetworkInterface.getNetworkInterfaces();
+	    while(ei.hasMoreElements()) {
+		NetworkInterface ni = (NetworkInterface) ei.nextElement();
+		Enumeration ea = ni.getInetAddresses();
+		while (ea.hasMoreElements()) {
+		   InetAddress na = (InetAddress) ea.nextElement();
+        	   if (na instanceof Inet4Address) 
+			System.out.println("\t " + ni.getName() 
+			    + " " + na.getHostName() + "/" + na.getHostAddress());
+		}
+	    }
+	//
 	    System.out.println("\n" + millisToShort(System.currentTimeMillis())
-		+ " Server " + SERVER_VERSION + " started on " + hostName 
-		+ " (port=" + this.port + "; spoolDir=" + this.spoolDir.getPath()
-		+ ")" );
+		+ " Server " + SERVER_VERSION + " started"  
+		+ "\n\t port=\"" + this.port + "\" spoolDir=\"" + this.spoolDir.getPath() + "\"" 
+	    );
 	}
 //
 	public long getAttr(Element e, String attrName, long defVal) {
@@ -839,7 +831,8 @@ public class RESTupServer {
 	    this.maxJobsStarted = (int)getAttr(eRoot,"maxJobsStarted",this.maxJobsStarted);
 	    this.jobsLifeTime = (int)getAttr(eRoot,"jobsLifeTime",this.jobsLifeTime);
 	    this.debugLevel = (int)getAttr(eRoot, "debugLevel", this.debugLevel);
-	// параметры сервисов из config.xml      
+	// параметры сервисов из config.xml
+	    System.out.println("Services:");      
 	    NodeList nList = eRoot.getElementsByTagName("service");
 	    FService fService = null;
 	    for (int i = 0; i < nList.getLength(); i++) {
@@ -857,10 +850,10 @@ public class RESTupServer {
                             (int)getAttr(eElement,"commandTimeout",fService.jobProcessTimeOut);
 			fService.comment = eElement.getTextContent();
 			this.addService(fService);
-			System.out.println("Service " + fService.name + " OK");
+			System.out.println("\t " + fService.name + " OK");
 	            }
 		} catch (Exception e) {
-		    System.err.println("Service " 
+		    System.err.println("\t " 
 			+ (fService.name == null || fService.name.isEmpty() ? i : fService.name) + " Ignored");
 		}
 	    }
@@ -1093,7 +1086,7 @@ public class RESTupServer {
 	// превышение размеров задания ?
 	    long fileSize = rq.getContentLength();  
 	    if ( (this.size + fileSize) > this.service.jobQuota) 
-		throw new HttpException(413, "Payload Too Large");
+		throw new HttpException(413, "Payload Too Large"); //RFC7213
 	// допустимое расширение файла ? 
 	    if (! this.service.fileExtAllowed( path )) 
 		throw new HttpException(415, "Unsupported Media Type");
@@ -1127,11 +1120,11 @@ public class RESTupServer {
 	}
 // Проверка кода возврата внешней программы
         public void checkExitVal() throws Throwable {
-	    if (this.started == 0) throw new HttpException(409,"Job Not Started");  
-	    if (this.ended == 0) throw new HttpException(409,"Job Not Ended");  
-	    if (this.exitVal == -2) throw new HttpException(500,"Service Failed"); 
-	    if (this.exitVal == -1) throw new HttpException(408,"Request Timeout"); 
-	    if (this.exitVal > 0 ) throw new HttpException(500,"Service Failed"); 
+	    if (this.started == 0) throw new HttpException(409,"Conflict");	// Job Not Started  
+	    if (this.ended == 0) throw new HttpException(409,"Conflict");	// Job Not Ended
+	    if (this.exitVal == -2) throw new HttpException(500,"Internal Server Error"); // Service Failed
+	    if (this.exitVal == -1) throw new HttpException(408,"Request Timeout");       // ?Service Timeout
+	    if (this.exitVal > 0 ) throw new HttpException(500,"Internal Server Error");  // Service Failed
         }
 // Запустить задание, ждать завершения
 	public void run(String params) throws Throwable {
@@ -1144,11 +1137,14 @@ public class RESTupServer {
 	    if (this.started != 0) 
 		throw new HttpException(409,"Conflict"); // already running
 	    if (this.size == 0 && this.service.jobQuota > 0)
-		throw new HttpException(409,"Conflict"); //nothing to do
+		return; //nothing to do
+//		throw new HttpException(409,"Conflict"); //nothing to do
 	// формирование строки команды
 	    String command = this.service.jobCommand
-		.replace("%inFilesDir%", jobFiles.getCanonicalPath() + File.separator)
-		.replace("%outFilesDir%", resFiles.getCanonicalPath() + File.separator)
+//		.replace("%inFilesDir%", jobFiles.getCanonicalPath() + File.separator)
+//		.replace("%outFilesDir%", resFiles.getCanonicalPath() + File.separator)
+		.replace("%inFilesDir%",  jobFiles.getPath() + File.separator)
+		.replace("%outFilesDir%", resFiles.getPath() + File.separator)
 		.replace("%jobParams%"
 		    , ((params == null || params.trim().length() == 0) ? this.service.jobDefaults : params));
 	    this.started =  System.currentTimeMillis();
@@ -1379,6 +1375,7 @@ public class RESTupServer {
 	    nList = dRoot.getElementsByTagName("folder");
 	    String uri = "";
 	    String comment;
+	    System.out.println("DAVInterfaces:");
 	    for (int i = 0; i < nList.getLength(); i++) {
 		comment = null;
 		try {
@@ -1404,7 +1401,7 @@ public class RESTupServer {
 				, serviceName + ";" + jobDefaults); 
 	// создать папку результатов в структуре сервисов
 //			    (new File(df, this.resFolderName)).mkdirs();	    
-		            System.out.println("DAVInterface " + uri + " OK");
+		            System.out.println("\t " + uri + " OK");
 	// добавим в аннотацию разрешенные расширения файлов
 			    comment = " (" + 
 				(service.fileExts.isEmpty() ? "*" : service.fileExts.toLowerCase()) + 
@@ -1417,7 +1414,7 @@ public class RESTupServer {
 			}
 	            }
 		} catch (Throwable e) {
-		    System.err.println("DAVInterface " + uri + " Ignored");
+		    System.err.println("\t " + uri + " Ignored");
 		}
 	    }
 	// сформировать файл справки
@@ -1442,7 +1439,7 @@ public class RESTupServer {
 		hText = hText.replace("%foldersTree%", fList );
 	    	writeString(new File(fs, hName), hText);
 	    } catch (Throwable th) {
-	    	System.err.println("DAVInterface unable to create " + hName);
+	    	System.err.println("DAVHelp:\t unable to create " + hName);
 		if (this.debugLevel > 0) th.printStackTrace();
 	    }
 	}
