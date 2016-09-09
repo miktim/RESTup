@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Usage: sh build.sh <java_file_name_without_extension>
 jname=$1
@@ -11,13 +11,13 @@ if [ ! -d ./classes/source ]
   then mkdir ./classes/source
   else rm -f ./classes/source/*.* 
 fi
-#cp ${jname}.java ./classes/source/
-cp Help.txt ./classes/source/
 javac -Xstdout ./compile.log -Xlint:unchecked -cp ./ -d ./classes -encoding Cp1251  ${jname}.java 
-if [ $? -ne 0 ] ; then
-  more < ./compile.log 
-  exit
+if [ $? -eq 0 ] ; then
+#  cp ${jname}.java ./classes/source/
+  cp Help.txt ./classes/source/
+  cd ./classes
+  jar cvfe ../../${jname}.jar ${jname} *.class  ./source/*.txt
+  cd ..
 fi
-cd ./classes
-jar cvfe ../../${jname}.jar ${jname} *.class  ./source/*.txt
-cd ..
+more < ./compile.log 
+
