@@ -20,7 +20,7 @@ Examples require installed LibreOffice (4.x for Windows platform) & Tesseract OC
 
 Package contains:
 
-\RESTup-RESTful_application_server_v1.3.pdf  ; documentation (sorry me - in Russian only)
+\RESTup_server_v1.3_RU.pdf            ; documentation (sorry me - in Russian only)
 \RESTupServer.jar                     ; server 
 \ServerStart.bat                      ; starting script for Windows
 \ServerStart.sh                       ; starting script for Linux
