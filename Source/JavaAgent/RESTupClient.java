@@ -2,7 +2,7 @@
 
 import org.net.restup;
 /**
- * Java RESTup server client
+ * Java RESTup server simple client
  * @version 61100
  * @author miktim@mail.ru, Petrozavodsk State University
  */
@@ -15,11 +15,11 @@ public class RESTupClient {
     System.out.println("");
     if (args.length != 1 && args.length !=5 ) {
       System.out.println("Usage:"
-        + "\njava -jar RESTupAgent.jar <server>"
+        + "\njava -jar RESTupClient.jar <server>"
         + "\n   get a list of services"
-        + "\njava -jar RESTupAgent.jar <server> <service> <servicePrm> <jobFile> <resultDir>"
+        + "\njava -jar RESTupClient.jar <server> <service> <servicePrm> <jobFile> <resultDir>"
         + "\n   execute service. For example:"
-        + "\njava -jar RESTupAgent.jar \"http://localhost:8080\" echo \"\" RESTupAgent.jar ./results\n");
+        + "\njava -jar RESTupClient.jar \"http://localhost:8080\" echo \"\" RESTupClient.jar ./results\n");
       return;
     }
     Agent agent = new Agent(new URL(args[0]));
