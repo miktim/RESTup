@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
 /**
- * The service is a remote application, which, commonly, gets some file(s) and returns result file(s).
+ * The RESTup service is a remote application, which, commonly, gets some file(s) and returns result file(s).
  * The Service object allows to create jobs.
  */
   public class Service {

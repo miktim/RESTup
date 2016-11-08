@@ -28,14 +28,14 @@ import javax.xml.parsers.DocumentBuilder;
       this.jobURL = jobURL;
     }
 /**
- * Returns an absolute root URL for the job files
+ * Returns an absolute URL for the job files
  * @return absolute URL
  */
     public URL getJobFilesURL() {
       return this.jobURL;
     }
 /**
- * Returns an absolute root URL of result files
+ * Returns an absolute URL of the result files
  * @return absolute URL
  */
     public URL getResFilesURL() {
@@ -49,17 +49,31 @@ import javax.xml.parsers.DocumentBuilder;
       putFile(new File(fileName));
     }
 /**
- * Put job file(s) to the server. If file is directory and service allow subdir creation, then recursively transfer all files from it.
+ * Put job file(s) to the server. If file is directory and service allows the creation of subdirectories, then recursively transfer all files from it.
  * @param file file or directory to transfer.
  */
-    public void putFile(File file) throws Throwable {
-      HttpURLConnection httpCon = RESTup.connection(RESTup.makeURL(this.jobURL,file.getName()));
-      httpCon.setRequestMethod("PUT");
-      httpCon.setDoOutput(true);
-      httpCon.addRequestProperty( "Content-Type", "application/octet-stream" );
-      httpCon.addRequestProperty( "Content-Length", String.valueOf(file.length()));
-      httpCon.setFixedLengthStreamingMode(file.length());
-      RESTup.streamToStream(new FileInputStream(file), RESTup.connect(httpCon).getOutputStream());
+    public void putFile(File file) throws IOException {
+      putFile(file, this.jobURL);
+    }
+// put file(s) recursively
+    void putFile(File file, URL url) throws IOException {
+      if (file.isDirectory()) {
+        File[] fileList = file.listFiles();
+        for (int i=0; i < fileList.length; i++) {
+          putFile(fileList[i], RESTup.makeURL(url ,fileList[i].getName()));
+        }
+      } else {
+        HttpURLConnection httpCon = RESTup.connection(url);
+        httpCon.setRequestMethod("PUT");
+        httpCon.setDoOutput(true);
+        httpCon.addRequestProperty( "Accept", "text/xml, application/octet-stream");
+        httpCon.addRequestProperty( "Content-Type", "application/octet-stream" );
+        httpCon.addRequestProperty( "Content-Length", String.valueOf(file.length()));
+//        httpCon.setFixedLengthStreamingMode(file.length());
+        RESTup.streamToStream(new FileInputStream(file), RESTup.connect(httpCon).getOutputStream());
+        httpCon.getResponseCode();
+        httpCon.disconnect();
+      }
     }
 /**
  * Put job file to the server as byte array
@@ -71,39 +85,27 @@ import javax.xml.parsers.DocumentBuilder;
         throw new IOException("Bad parameter");
       HttpURLConnection httpCon = RESTup.connection(RESTup.makeURL(jobURL,filePath));
       httpCon.setRequestMethod("PUT");
-      httpCon.setDoOutput(true);
       httpCon.addRequestProperty( "Content-Type", "application/octet-stream" );
-      httpCon.addRequestProperty( "Content-Length", String.valueOf(content.length) );
-      httpCon.setFixedLengthStreamingMode(content.length);
-      OutputStream out = RESTup.connect(httpCon).getOutputStream();
-      try {
-        out.write(content);
-      } finally {
-        out.flush();
-        out.close();
-      }
+      httpCon.addRequestProperty( "Accept", "text/xml, application/octet-stream");
+      RESTup.writeContent(httpCon, content);
+      httpCon.getResponseCode();
+      httpCon.disconnect();
     }
 /**
  * Execute job. Delete job files. Get URL of result files.
  * @param parameters The parameter string (depending on the service)
  */
-    public void execute(String parameters) throws Throwable {
+    public void execute(String parameters) throws IOException {
       HttpURLConnection httpCon = RESTup.connection(this.jobURL);
       httpCon.setRequestMethod("POST");
       byte[] buf = new byte[0];
       if (!(parameters == null || parameters.isEmpty())) buf = parameters.getBytes();
-      httpCon.setDoOutput(true);
-      httpCon.setDoInput(true);
+      httpCon.addRequestProperty("Accept", "text/xml, application/octet-stream");
       httpCon.addRequestProperty("Content-Type", "text/plain; charset=utf-8");
-      httpCon.addRequestProperty("Content-Length", String.valueOf(buf.length));
-      OutputStream out = RESTup.connect(httpCon).getOutputStream();
-      try { 
-        out.write(buf);
-      } finally {
-        out.flush();
-        out.close();
-      }
+      RESTup.writeContent(httpCon, buf);
+      httpCon.getResponseCode();
       this.resURL = new URL(httpCon.getHeaderField("Location"));
+      httpCon.disconnect();
     }
 /**
  * Returns the list of result job files
@@ -121,11 +123,12 @@ import javax.xml.parsers.DocumentBuilder;
       if (filePath == null || filePath.trim().isEmpty())
         throw new IOException("Bad parameter");
       String pa[] = filePath.split("([^/]+)[/]?$");
-      String path = pa.length == 0 ? "" : pa[1];
+      String path = pa.length == 0 ? "" : pa[0];
       String name = filePath.substring(path.length());
-      ResultFile[] fileList = ResultFile.getFileListByURL(RESTup.makeURL(this.jobURL, path));
-      for (int i=0; i < fileList.length; i++) 
-        if (fileList[i].getName() == name) return fileList[i];
+      ResultFile[] fileList = ResultFile.getFileListByURL(RESTup.makeURL(this.resURL, path));
+      for (int i=0; i < fileList.length; i++) { 
+        if (fileList[i].getName().equalsIgnoreCase(name)) return fileList[i];
+      }
       return null;
     }
 /**
@@ -134,8 +137,9 @@ import javax.xml.parsers.DocumentBuilder;
     public void delete() throws Throwable {
       HttpURLConnection httpCon = RESTup.connection(this.jobURL);
       httpCon.addRequestProperty("Accept","text/xml");
-      httpCon.setDoInput(true);
+//      httpCon.setDoInput(true);
       httpCon.setRequestMethod("DELETE");
       httpCon.getResponseCode();
+      httpCon.disconnect();
     }
   }// Job class

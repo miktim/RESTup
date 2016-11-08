@@ -28,7 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
     ResultFile(Element eFile, URL contentURL) throws IOException {
 // contentURL is value of header field "Content-Location"
       this.fileName = eFile.getElementsByTagName("name").item(0).getTextContent();
-      this.fileURL = RESTup.makeURL(contentURL, fileName);
+      this.fileURL = RESTup.makeURL(contentURL, this.fileName);
       String s = eFile.getElementsByTagName("size").item(0).getTextContent();
       if (!(s == null || s.isEmpty())) this.fileLength = Long.parseLong(s);
     }
@@ -88,7 +88,7 @@ import javax.xml.parsers.DocumentBuilder;
       HttpURLConnection httpCon = RESTup.connection(fileURL);
       httpCon.addRequestProperty( "Accept", "application/octet-stream" );
       httpCon.setRequestMethod("GET");
-      httpCon.setDoInput(true);
+//      httpCon.setDoInput(true);
       RESTup.streamToStream(httpCon.getInputStream(), new FileOutputStream(file));
     }
 /**
@@ -99,7 +99,7 @@ import javax.xml.parsers.DocumentBuilder;
       HttpURLConnection httpCon = RESTup.connection(fileURL);
       httpCon.setRequestMethod("GET");
       httpCon.addRequestProperty( "Accept", "application/octet-stream" );
-      httpCon.setDoInput(true);
+//      httpCon.setDoInput(true);
       int len = Integer.parseInt(RESTup.connect(httpCon).getHeaderField("Content-Length"));
       byte[] content = new byte[len];
       try {
@@ -114,7 +114,7 @@ import javax.xml.parsers.DocumentBuilder;
  */
     static ResultFile[] getFileListByURL(URL url) throws IOException {
       HttpURLConnection httpCon = RESTup.connection(url);
-      httpCon.setDoInput(true);
+//      httpCon.setDoInput(true);
       ResultFile[] fileList = null;
       try {
         Element eRoot = RESTup.getRootElement(httpCon);
