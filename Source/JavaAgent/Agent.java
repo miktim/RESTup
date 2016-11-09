@@ -1,4 +1,4 @@
-package org.net.restup;
+package org.net.restupAgent;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -21,7 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
  * The agent provides access to the RESTup server services.
  */
   public class Agent {
-    static final String USER_AGENT_VERSION = "RESTupAgent/61100";
+//    static final String USER_AGENT_VERSION = "RESTupAgent/61100";
     URL serverURL;
     Service[] serviceList;
 
@@ -29,21 +29,21 @@ import javax.xml.parsers.DocumentBuilder;
  * Constructor for RESTup server agent
  * @param host a string containing http protocol, host address and, optionally, port. Example: "http://localhost:8080"
  */
-    public Agent(String host) throws Throwable {
+    public Agent(String host) throws IOException {
       newAgent(new URL(host));
     }
 /**
  * Constructor for RESTup server agent
  * @param hostURL host URL ( http://host[:port] )
  */
-    public Agent(URL hostURL) throws Throwable {
+    public Agent(URL hostURL) throws IOException {
       newAgent(hostURL);
     }
 /**
  * Get a list of services that are supported by the server.
  * @return array of RESTup Service objects
  */
-    public Service[] getServiceList() throws Throwable {
+    public Service[] listServices() throws IOException {
       return Service.getServiceListByURL(this.serverURL);
     }
 /**
@@ -51,7 +51,7 @@ import javax.xml.parsers.DocumentBuilder;
  * @param serviceName name of service
  * @return RESTup Service object or throws  IOException if not found
  */
-    public Service getService(String serviceName) throws Throwable {
+    public Service getService(String serviceName) throws IOException {
       this.serviceList = Service.getServiceListByURL(this.serverURL);
       for (int i = 0; i < serviceList.length; i++) {
         if (serviceList[i].getName().equalsIgnoreCase(serviceName)) return serviceList[i];
@@ -59,7 +59,7 @@ import javax.xml.parsers.DocumentBuilder;
       throw new IOException("Service not found");
     }
 
-    void newAgent(URL hostURL) throws Throwable {
+    void newAgent(URL hostURL) throws IOException {
       this.serverURL = new URL(hostURL, "/restup");
       this.serviceList = Service.getServiceListByURL(this.serverURL);
     }

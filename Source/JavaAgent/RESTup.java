@@ -1,4 +1,4 @@
-package org.net.restup;
+package org.net.restupAgent;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -24,35 +24,6 @@ class RESTup {
 /*
  * Common static methods
  */
-  static void writeContent(HttpURLConnection httpCon, byte[] content) throws IOException {
-//    httpCon.setDoOutput(true);
-//    httpCon.setDoInput(true);
-    httpCon.addRequestProperty("Content-Length",String.valueOf(content.length));
-//    httpCon.setFixedLengthStreamingMode(content.length);
-    OutputStream out =  connect(httpCon).getOutputStream();
-    try {
-      out.write(content);
-    } finally {
-      out.flush();
-      out.close();
-    }
-    httpCon.getResponseCode();
-    httpCon.disconnect();
-  }
-
- static void streamToStream(InputStream in, OutputStream out) throws IOException {
-    byte[] buf = new byte[2048];
-    try {
-      for (int i = in.read(buf); i > 0; i = in.read(buf)) {
-        out.write(buf,0,i);
-      }
-    } finally {
-      out.flush();
-      out.close();
-      in.close();
-    }
-  }
-
   static HttpURLConnection connection(URL url) throws IOException {
     HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 //    String agentProp = "User-Agent";
@@ -64,16 +35,23 @@ class RESTup {
     httpCon.setUseCaches(false);
     return httpCon;
   }
-
+// 
   static HttpURLConnection connect(HttpURLConnection httpCon) throws IOException {
     httpCon.connect();
-//    if (httpCon.getResponseCode() > 299) {
-//      throw new HTTPException(httpCon.getResponseCode());
-//    }
     return httpCon;
   }
-//
+// check response status code
+  static HttpURLConnection checkStatus(HttpURLConnection httpCon) throws IOException {
+    int status = httpCon.getResponseCode();
+    if (status > 299) {
+      httpCon.disconnect();
+      throw new IOException("HTTP exception. Status code: " + status);
+    }
+    return httpCon;
+  }
+// encode url file path
   static URL makeURL(URL url, String path) throws IOException {
+    if (path == null || path.isEmpty()) return url;
     String[] pa = path.split("/");
     StringBuffer pb = new StringBuffer();
     for (int i=0; i<pa.length; i++) {
@@ -84,12 +62,37 @@ class RESTup {
     }
     return new URL(url, pb.toString());
   }
+// write buffer to server
+  static void writeContent(HttpURLConnection httpCon, byte[] content) throws IOException {
+    httpCon.addRequestProperty("Content-Length",String.valueOf(content.length));
+    httpCon.setFixedLengthStreamingMode(content.length);
+    OutputStream out = connect(httpCon).getOutputStream();
+    try {
+      out.write(content);
+      out.flush();
+    } finally {
+      out.close();
+      checkStatus(httpCon).disconnect();
+    }
+  }
+// read/write stream
+  static void streamToStream(InputStream in, OutputStream out) throws IOException {
+    byte[] buf = new byte[2048];
+    try {
+      for (int i = in.read(buf); i > 0; i = in.read(buf)) {
+        out.write(buf,0,i);
+      }
+      out.flush();
+    } finally {
+      out.close();
+      in.close();
+    }
+  }
 //
-  static Element getRootElement(HttpURLConnection httpCon) throws IOException {
+  static Element getXMLRootElement(HttpURLConnection httpCon) throws IOException {
     httpCon.setRequestProperty("Accept", "text/xml");
     httpCon.setRequestMethod("GET");
-//    httpCon.setDoInput(true);
-    InputStream in = connect(httpCon).getInputStream();
+    InputStream in = checkStatus(connect(httpCon)).getInputStream();
     Element eRoot = null;
     try {
       DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
@@ -97,9 +100,10 @@ class RESTup {
       Document dDoc = dBuilder.parse(in);
       eRoot = dDoc.getDocumentElement();
     } catch (Exception e) {
-      throw new IOException("XML unrecoverable parsing exception", e);
+      throw new IOException("XML parsing exception", e);
     } finally {
       in.close();
+      checkStatus(httpCon).disconnect();
     }
     return eRoot;
   }

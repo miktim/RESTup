@@ -1,4 +1,4 @@
-import org.net.restup.*;
+import org.net.restupAgent.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,8 +13,8 @@ class RESTupAgentTest {
     System.out.print("\nAgent Constructor (connection)...");
     Agent agent = new Agent(args[0]);
     System.out.println("OK");
-    System.out.print("Agent.getServiceList()...");
-    Service[] serviceList = agent.getServiceList();
+    System.out.print("Agent.listServices()...");
+    Service[] serviceList = agent.listServices();
     for (int i=0; i<serviceList.length; i++)
       System.out.print("\n" + serviceList[i].getName() + "\t" +serviceList[i].getURL());
     System.out.println(" ...OK");
@@ -31,8 +31,8 @@ class RESTupAgentTest {
     System.out.print("Job.execute(\"*.class\")...");
     job.execute("*.class");
     System.out.println("OK");
-    System.out.print("Job.getResultFile(\"/net/restup\").getFileList()...");
-    ResultFile[] fileList = job.getResultFile("/net/restup/").getFileList();
+    System.out.print("Job.getResultFile(\"/net/restupAgent\").listResultFiles()...");
+    ResultFile[] fileList = job.getResultFile("/net/restupAgent/").listResultFiles();
     for (int i=0; i<fileList.length; i++)
       System.out.print("\n"+fileList[i].getName() + "\t" +fileList[i].length() + "\t" + fileList[i].getURL());
     String fileName = "RESTupAgentTest.class";
@@ -67,16 +67,13 @@ class RESTupAgentTest {
   }
   
   static boolean isSameContent(File file, byte[] content) throws Throwable {
-    byte[] srcContent = new byte[0];
+    byte[] srcContent = new byte[(int)file.length()];
     FileInputStream in = new FileInputStream(file);
     try {
-      srcContent = new byte[(int)file.length()];
       in.read(srcContent);
     } catch (Exception e) {
-    } finally {
-      in.close();
     }
-System.out.println("srcLen="+srcContent.length+" dstLen="+content.length);
+    in.close();
     return Arrays.equals(srcContent, content);
   }
 }

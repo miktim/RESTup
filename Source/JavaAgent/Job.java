@@ -1,4 +1,4 @@
-package org.net.restup;
+package org.net.restupAgent;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -45,7 +45,7 @@ import javax.xml.parsers.DocumentBuilder;
  * Put job file to the server.
  * @param fileName file or directory name to transfer.
  */
-    public void putFile(String fileName) throws Throwable {
+    public void putFile(String fileName) throws IOException {
       putFile(new File(fileName));
     }
 /**
@@ -60,7 +60,7 @@ import javax.xml.parsers.DocumentBuilder;
       if (file.isDirectory()) {
         File[] fileList = file.listFiles();
         for (int i=0; i < fileList.length; i++) {
-          putFile(fileList[i], RESTup.makeURL(url ,fileList[i].getName()));
+          putFile(fileList[i], RESTup.makeURL(url, fileList[i].getName()));
         }
       } else {
         HttpURLConnection httpCon = RESTup.connection(url);
@@ -71,8 +71,7 @@ import javax.xml.parsers.DocumentBuilder;
         httpCon.addRequestProperty( "Content-Length", String.valueOf(file.length()));
 //        httpCon.setFixedLengthStreamingMode(file.length());
         RESTup.streamToStream(new FileInputStream(file), RESTup.connect(httpCon).getOutputStream());
-        httpCon.getResponseCode();
-        httpCon.disconnect();
+        RESTup.checkStatus(httpCon).disconnect();
       }
     }
 /**
@@ -80,15 +79,12 @@ import javax.xml.parsers.DocumentBuilder;
  * @param content byte array of file content
  * @param filePath destination relative URL file name
  */
-    public void putFileContent(byte[] content, String filePath) throws Throwable {
-      if (filePath == null || filePath.trim().isEmpty())
-        throw new IOException("Bad parameter");
+    public void putFileContent(byte[] content, String filePath) throws IOException {
       HttpURLConnection httpCon = RESTup.connection(RESTup.makeURL(jobURL,filePath));
       httpCon.setRequestMethod("PUT");
       httpCon.addRequestProperty( "Content-Type", "application/octet-stream" );
       httpCon.addRequestProperty( "Accept", "text/xml, application/octet-stream");
       RESTup.writeContent(httpCon, content);
-      httpCon.getResponseCode();
       httpCon.disconnect();
     }
 /**
@@ -103,15 +99,14 @@ import javax.xml.parsers.DocumentBuilder;
       httpCon.addRequestProperty("Accept", "text/xml, application/octet-stream");
       httpCon.addRequestProperty("Content-Type", "text/plain; charset=utf-8");
       RESTup.writeContent(httpCon, buf);
-      httpCon.getResponseCode();
-      this.resURL = new URL(httpCon.getHeaderField("Location"));
+      this.resURL = new URL((RESTup.checkStatus(httpCon)).getHeaderField("Location"));
       httpCon.disconnect();
     }
 /**
  * Returns the list of result job files
  * @return array of ResultFile objects
  */
-    public ResultFile[] getFileList() throws Throwable {
+    public ResultFile[] listResultFiles() throws IOException {
       return ResultFile.getFileListByURL(this.resURL);
     }
 /**
@@ -134,10 +129,9 @@ import javax.xml.parsers.DocumentBuilder;
 /**
  *  Delete RESTup job. "Forgotten" jobs are deleted automatically by the server 
  */
-    public void delete() throws Throwable {
+    public void delete() throws IOException {
       HttpURLConnection httpCon = RESTup.connection(this.jobURL);
       httpCon.addRequestProperty("Accept","text/xml");
-//      httpCon.setDoInput(true);
       httpCon.setRequestMethod("DELETE");
       httpCon.getResponseCode();
       httpCon.disconnect();

@@ -1,4 +1,4 @@
-package org.net.restup;
+package org.net.restupAgent;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -75,26 +75,28 @@ import javax.xml.parsers.DocumentBuilder;
  * Create a job for this service
  * @return RESTup Job object
  */
-    public Job createJob() throws Throwable {
+    public Job createJob() throws IOException {
       HttpURLConnection httpCon = RESTup.connection(this.serviceURL);
       httpCon.setRequestMethod("POST");
       httpCon.addRequestProperty( "Content-Type", "application/octet-stream" );
       httpCon.addRequestProperty( "Accept", "text/xml, application/octet-stream" );
       RESTup.writeContent(httpCon, new byte[0]);
-      return new Job(new URL(httpCon.getHeaderField("Location")));
+      Job job =  new Job(new URL((RESTup.checkStatus(httpCon)).getHeaderField("Location")));
+      httpCon.disconnect();
+      return job;
     }
 //
     static Service[] getServiceListByURL(URL url) throws IOException {
       Service[] serviceList = null;
+      Element eRoot = RESTup.getXMLRootElement(RESTup.connection(url));
       try {
-        Element eRoot = RESTup.getRootElement(RESTup.connection(url));
         NodeList nList = eRoot.getElementsByTagName("service");
         serviceList = new Service[nList.getLength()];
         for (int i = 0; i < nList.getLength(); i++) {
           serviceList[i] =  new Service((Element)nList.item(i)) ;
         }
       } catch (Exception e) {
-        throw new IOException ("XML unrecoverable parsing error", e);
+        throw new IOException ("XML parsing exception", e);
       }
       return serviceList;
     }
