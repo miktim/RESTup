@@ -1,4 +1,4 @@
 #!/bin/bash
-#
-cp -rp $1 $2
+
+cd $1; find . -name "$3" | cpio -pdm $2
 exit $?

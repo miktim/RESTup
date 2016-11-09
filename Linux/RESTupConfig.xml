@@ -42,7 +42,7 @@ commandTimeout  предельное время исполнения внешн�
 Возвращает текстовый файл в кодировке UTF-8.
 Параметр: eng | deu | swe | fin | rus определяет язык распознаваемого изображения.
 </service>
-<service name="Echo" debug="on" fileExts="" jobCommand="sh Echo.sh %inFilesDir%%jobParams% %outFilesDir%" jobDefaults="*" jobQuota="5000000" commandTimeout="20">
+<service name="Echo" debug="on" fileExts="" jobCommand="sh Echo.sh %inFilesDir% %outFilesDir% %jobParams%" jobDefaults="*" jobQuota="5000000" commandTimeout="20">
 Эхо-сервис. Возвращает файл(ы) задания по маске, передаваемой в качестве параметра.
 </service>
 <!--
