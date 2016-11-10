@@ -2,7 +2,7 @@
 
 Lightweight pure JavaSE/6 server provides a RESTful API to the console applications 
 (hereinafter - services). 
-Interaction with the server is performed according to the following General scheme:
+Interaction with the server is performed according to the following general scheme:
 - get a list of services (GET), to determine the URI of the service;
 - create a job to selected service (POST), to get the URI for the input files;
 - send file(s) for the job (PUT);
@@ -15,27 +15,30 @@ Server has an experimental WebDAV-based UI. An interface is a set of remote fold
 with corresponding services. The service folder contains subfolders for input and output files.
 UI can be accesed via WebDAV clients: Windows Explorer, Gnome Nautilus etc.
 
-Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL client RESTful API. 
-Examples require installed LibreOffice (4.x for Windows platform) & Tesseract OCR. 
+Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL & Java API (agents). 
+Examples require installed LibreOffice (4.x for Windows platform script) & Tesseract OCR. 
 
 Package contains:
 
-\RESTup_server_v1.3_RU.pdf            ; documentation (sorry me - in Russian only)
-\RESTupServer.jar                     ; server 
-\ServerStart.bat                      ; starting script for Windows
-\ServerStart.sh                       ; starting script for Linux
-\Linux\                               ; config & examples for Linux                           
-\Linux\Echo.sh                        ; echo service
-\Linux\Office2x.sh                    ; transform office files
-\Linux\RESTupConfig.xml             
-\Linux\Tesseract-OCR.sh               
-\Windows\                             ; config & examples for Windows
-\Windows\Office2x.js 
-\Windows\RESTupConfig.xml
-\Windows\Tesseract-OCR.js
-\Oracle\restup_web_server.sql         ; client for Oracle
-\Source\RESTupServer.java
-\Source\build.bat                     ; compile & build script
-\Source\build.sh                      ; compile & build script
-\Source\Help.txt                      ; help template for WebDAV users
+/RESTup_server_v1.3_xxxx_RU.pdf  ; documentation (sorry me - in Russian only)
+/RESTupServer.jar                ; server 
+/ServerStart.bat                 ; starting script for Windows
+/ServerStart.sh                  ; starting script for Linux
+/Linux/                          ; config & examples for Linux                           
+/Linux/RESTupConfig.xml          ; server config
+/Linux/Echo.sh                   ; echo service script
+/Linux/Office2x.sh               ; transform office docs service script
+/Linux/Tesseract-OCR.sh          ; OCR service script
+/Windows/                        ; config & examples for Windows
+/Windows/RESTupConfig.xml
+/Windows/Office2x.js 
+/Windows/Tesseract-OCR.js
+/Agents/Oracle/restup_agent_package.sql ; PL/SQL agent package for Oracle
+/Agents/Oracle/restup_agent_test.sql    ; PL/SQL test script
+/Agents/Java/                         ; self documented (javadoc) sources of the package org.net.restupAgent,
+                                      ; package test, simple client, build scripts  
+/Source/RESTupServer.java             ; server source
+/Source/build.bat                     ; build script
+/Source/build.sh                      ; build script
+/Source/Help.txt                      ; help template for WebDAV users
 
