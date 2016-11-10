@@ -35,7 +35,8 @@ Package contains:
 /Windows/Tesseract-OCR.js
 /Agents/Oracle/restup_agent_package.sql ; PL/SQL RESTup agent package for Oracle
 /Agents/Oracle/restup_agent_test.sql    ; PL/SQL package test script
-/Agents/Java/                    ; self documented (javadoc) sources of the package org.net.restupAgent,
+/Agents/Java/                    ; self documented (javadoc) sources of
+                                 ; the package org.net.restupAgent,
                                  ; package test, simple client, build scripts  
 /Source/RESTupServer.java        ; server source
 /Source/build.bat                ; build script
