@@ -1,4 +1,6 @@
 declare
+-- !!! SET CORRECT host URL below
+  l_host varchar2(50) := 'http://localhost:8080/restup';
   l_uri varchar2(500);-- returned URI
   l_sblob BLOB; -- source file
   l_rblob BLOB; -- returned file
@@ -16,8 +18,7 @@ begin
 end;
 begin
 -- get echo service URI, output http status code & URI 
-  l_uri := restup_agent.service_get('echo'
-    , 'http://localhost:8080/restup/');
+  l_uri := restup_agent.service_get('echo', l_host);
   dbms_output.put_line(apex_web_service.g_status_code||' '||l_uri);
 -- create job for echo service, output http status code &  URI for job files
   l_uri := restup_agent.job_create(l_uri);
