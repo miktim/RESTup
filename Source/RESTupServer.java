@@ -3,8 +3,9 @@
  * RESTupServer RESTful сервер консольных приложений
  * Версия:	1.3.0
  * Автор:	miktim@mail.ru
- * Дата: 	2016.09.10
+ * Дата: 	2016.11.11
  * Изменения:
+ * 2016.11.11 
  * 2015 дополнено DAV-интерфейсом, переработано под влиянием Joshua Bloch и Steven McConnel
  * 2014 java реализация под впечатлением http://habrahabr.ru/post/69136/ и James Gosling, Ken Arnold
  * 2013 идея, RESTful интерфейс
@@ -511,7 +512,9 @@ public class RESTupServer {
     }
 //
     public static String URIDecode(String uri) throws Throwable {
-	return URLDecoder.decode(uri.replace("+","%2B"),"utf-8");
+        String decodedUri = URLDecoder.decode(uri.replace("+","%2B"),"utf-8");
+        if (decodedUri.indexOf("../") > -1) return null;
+        return decodedUri;
     }
 //
     public static boolean rmTree(File file) {
@@ -579,7 +582,7 @@ public class RESTupServer {
 
 //
     class FServer {
-	public static final String SERVER_VERSION = "RESTup/1.3.0.60910";
+	public static final String SERVER_VERSION = "RESTup/1.3.0.61100";
 	public static final String SERVER_ROOT = "/restup";
 /**
  *  Расширение класса листенера методом обслуживания http-запросов сервера
@@ -1113,6 +1116,7 @@ public class RESTupServer {
 		    || parms.indexOf("&") != -1
 		    || parms.indexOf(";") != -1
 		    || parms.indexOf("\n") != -1
+                    || parms.indexOf("..") != -1
 		    ) throw new HttpException(400, "Bad Request");
 		return parms;
 	    } catch (IOException ie) {};
@@ -1122,8 +1126,8 @@ public class RESTupServer {
         public void checkExitVal() throws Throwable {
 	    if (this.started == 0) throw new HttpException(409,"Conflict");	// Job Not Started  
 	    if (this.ended == 0) throw new HttpException(409,"Conflict");	// Job Not Ended
-	    if (this.exitVal == -2) throw new HttpException(500,"Internal Server Error"); // Service Failed
-	    if (this.exitVal == -1) throw new HttpException(408,"Request Timeout");       // ?Service Timeout
+	    if (this.exitVal == -2) throw new HttpException(500,"Internal Server Error"); // Service Failed (can't run)
+	    if (this.exitVal == -1) throw new HttpException(503,"Service Unavailable");   // Service Timeout
 	    if (this.exitVal > 0 ) throw new HttpException(500,"Internal Server Error");  // Service Failed
         }
 // Запустить задание, ждать завершения
@@ -1131,7 +1135,7 @@ public class RESTupServer {
 	    this.run(this.jobFilesDir(), this.resFilesDir(), params);
 	}
 	public synchronized void run(File jobFiles, File resFiles, String params) throws Throwable {
-	// задание завершено?
+	// задание завершено? 
 	    if (this.ended != 0) checkExitVal();
 	// задание уже запущено? - ошибка
 	    if (this.started != 0) 
