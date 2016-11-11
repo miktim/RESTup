@@ -3,8 +3,8 @@ package org.net.restupAgent;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
 /**
- * The job provides access to the selected service.
+ * Job provides access to the selected service.
  */
   public class Job {
     URL jobURL = null;
@@ -42,14 +42,18 @@ import javax.xml.parsers.DocumentBuilder;
       return this.resURL;
     }
 /**
- * Put job file to the server.
+ * Put job file(s) to the server.
+ * If file is a directory and the service allows the creation of subdirectories,
+ * then all files recursively transfer from it.
  * @param fileName file or directory name to transfer.
  */
     public void putFile(String fileName) throws IOException {
       putFile(new File(fileName));
     }
 /**
- * Put job file(s) to the server. If file is directory and service allows the creation of subdirectories, then recursively transfer all files from it.
+ * Put job file(s) to the server.
+ * If file is a directory and the service allows the creation of subdirectories,
+ * then all files recursively transfer from it.
  * @param file file or directory to transfer.
  */
     public void putFile(File file) throws IOException {
@@ -77,7 +81,7 @@ import javax.xml.parsers.DocumentBuilder;
 /**
  * Put job file to the server as byte array
  * @param content byte array of file content
- * @param filePath destination relative URL file name
+ * @param filePath relative URL file name
  */
     public void putFileContent(byte[] content, String filePath) throws IOException {
       HttpURLConnection httpCon = RESTup.connection(RESTup.makeURL(jobURL,filePath));
@@ -89,7 +93,7 @@ import javax.xml.parsers.DocumentBuilder;
     }
 /**
  * Execute job. Delete job files. Get URL of result files.
- * @param parameters The parameter string (depending on the service)
+ * @param parameters The parameter string (depending on the service).
  */
     public void execute(String parameters) throws IOException {
       HttpURLConnection httpCon = RESTup.connection(this.jobURL);
@@ -101,6 +105,12 @@ import javax.xml.parsers.DocumentBuilder;
       RESTup.writeContent(httpCon, buf);
       this.resURL = new URL((RESTup.checkStatus(httpCon)).getHeaderField("Location"));
       httpCon.disconnect();
+    }
+/**
+ * Execute job without parameters. Delete job files. Get URL of result files.
+ */
+    public void execute() throws IOException {
+      this.execute(null);
     }
 /**
  * Returns the list of result job files
@@ -119,7 +129,7 @@ import javax.xml.parsers.DocumentBuilder;
         throw new IOException("Bad parameter");
       String pa[] = filePath.split("([^/]+)[/]?$");
       String path = pa.length == 0 ? "" : pa[0];
-      String name = filePath.substring(path.length());
+      String name = filePath.substring(path.length()).replace("/","");
       ResultFile[] fileList = ResultFile.getFileListByURL(RESTup.makeURL(this.resURL, path));
       for (int i=0; i < fileList.length; i++) { 
         if (fileList[i].getName().equalsIgnoreCase(name)) return fileList[i];

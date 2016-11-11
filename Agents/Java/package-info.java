@@ -1,15 +1,17 @@
 /**
  * This package provides an API to the RESTup applications WEB server.<br>
- * Usage:<br><br>
- * Agent agent = new Agent("hhtp://localhost:8080");<br>
- * Service service = agent.getService("echo");<br>
- * Job job = service.createJob();<br>
- * job.putFile("local file or directory");<br>
- * job.execute();<br>
- * ResultFile[] fileList = job.listResultFiles();<br>
- * for (int i=0; i < fileList.length; i++)  fileList[i].getFile("local directory");<br>
- * job.delete();<br><br>
- * @version 61100
+ * The following example demonstrates using the RESTup server API for debug Echo-service, 
+ * that returns user files by mask passed as a parameter:<br><pre>
+ * Agent agent = new Agent("hhtp://localhost:8080");
+ * Service service = agent.getService("echo");
+ * Job job = service.createJob();
+ * job.putFile("./src/");                 // source files directory
+ * job.execute("*.txt");                  // execute with file mask
+ * ResultFile[] fileList = job.listResultFiles();
+ * for (int i=0; i < fileList.length; i++)
+ *     fileList[i].getFile("./dst/");     // destination directory
+ * job.delete();</pre><br>
+ * @version 61111
  * @author miktim@mail.ru, Petrozavodsk State University
  */
 package org.net.restupAgent;

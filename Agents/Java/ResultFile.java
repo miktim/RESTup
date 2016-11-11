@@ -3,8 +3,8 @@ package org.net.restupAgent;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,24 +37,24 @@ import javax.xml.parsers.DocumentBuilder;
  * @return The name of the remote file
  */
     public String getName() {
-      return fileName;
+      return fileName.replace("/","");
     }
 /**
- * Returns the length of remote file or directory.
+ * Returns the length of remote file.
  * @return The length of the remote file
  */
     public long length() {
       return fileLength;
     }
 /**
- * Returns an absolute URL of remote file or directory
+ * Returns an absolute URL of remote file or directory.
  * @return an absolute URL of remote file
  */
     public URL getURL() {
       return fileURL;
     }
 /**
- * Get a list of result files from server, if remote object is directory. Otherwise returns null.
+ * Returns an array of result files, if denoted result file is directory. Otherwise returns null.
  * @return array of ResultFile objects or null.
  */
     public ResultFile[] listResultFiles() throws IOException {
@@ -70,8 +70,8 @@ import javax.xml.parsers.DocumentBuilder;
     }
 /**
  * Get result file from server
- * If destination file is directory, remote file will be saved with the original name or,
- * if remote file is directory, text/xml returns with ".dir.xml" extension 
+ * If destination file is directory, remote file will be saved with the original name.
+ * If remote file is directory, IOException("Not found") is thrown.
  * @param fileName name of destination file or destination directory
  */
     public void getFile(String fileName) throws IOException {
@@ -79,12 +79,13 @@ import javax.xml.parsers.DocumentBuilder;
     }
 /**
  * Get result file from server.
- * If destination file is directory, remote file will be saved with the original name or,
- * if remote file is directory, text/xml returns with ".dir.xml" extension 
+ * If destination file is directory, remote file will be saved with the original name.
+ * If remote file is directory, IOException("Not found") is thrown.
  * @param file  destination file or destination directory
  */
     public void getFile(File file) throws IOException {
-      if (file.isDirectory()) file = new File(file, this.fileName.replace("/","") + (this.isDirectory() ? ".dir.xml" : ""));
+      if (this.isDirectory()) throw new IOException("Not found");
+      if (file.isDirectory()) file = new File(file, this.fileName);
       HttpURLConnection httpCon = RESTup.connection(fileURL);
       httpCon.addRequestProperty( "Accept", "application/octet-stream" );
       httpCon.setRequestMethod("GET");
@@ -96,11 +97,13 @@ import javax.xml.parsers.DocumentBuilder;
       }
     }
 /**
- * Get the contents of the remote file or directory.
- * @return the file contents as byte array. If the remote file is a directory, text/xml returns
+ * Get the contents of the remote file.
+ * If remote file is directory, IOException("Not found") is thrown.
+ * @return the file contents as byte array.
  */
     public byte[] getFileContent() throws IOException {
-      HttpURLConnection httpCon = RESTup.connection(fileURL);
+      if (this.isDirectory()) throw new IOException("Not found");
+      HttpURLConnection httpCon = RESTup.connection(this.fileURL);
       httpCon.setRequestMethod("GET");
       httpCon.addRequestProperty( "Accept", "application/octet-stream" );
       int len = Integer.parseInt(RESTup.connect(httpCon).getHeaderField("Content-Length"));

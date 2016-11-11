@@ -35,12 +35,16 @@ class RESTupAgentTest {
     System.out.print("Job.execute(\"*.class\")...");
     job.execute("*.class");
     System.out.println("OK");
-    System.out.print("Job.getResultFilee(\"/net/restupAgent/\")...");
+    System.out.print("Job.getResultFile(\"/net/restupAgent/\")...");
     ResultFile resFile = job.getResultFile("/net/restupAgent/");
     System.out.println("OK");
     System.out.print("ResultFile.getFile(\"" + dirName + "\")...");
-    resFile.getFile(dirName);
-    System.out.println("OK");
+    try {
+      resFile.getFile(dirName);
+      System.out.println("\n...SURPRISE! Exception waiting...");
+    } catch (Throwable e) {
+      System.out.println(e.toString()+" ...OK");
+    }
     System.out.print("ResultFile.listResultFiles()...");
     ResultFile[] fileList = resFile.listResultFiles();
     for (int i=0; i<fileList.length; i++)

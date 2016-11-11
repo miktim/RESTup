@@ -3,8 +3,8 @@ package org.net.restupAgent;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,14 +44,14 @@ import javax.xml.parsers.DocumentBuilder;
       return serviceName;
     }
 /**
- * Returns the absolute URL of the service
- * @return The absolute URL of the service
+ * Returns the absolute URL of the service.
+ * @return The absolute URL of the service.
  */
     public URL getURL() {
       return serviceURL;
     }
 /**
- * Returns a maximum total size of the service job files.
+ * Returns a maximum total size of job files.
  * @return maximum total size in bytes
  */
     public long getJobQuota() {
@@ -72,7 +72,7 @@ import javax.xml.parsers.DocumentBuilder;
       return description;
     }
 /**
- * Create a job for this service
+ * Create a job for this service.
  * @return RESTup Job object
  */
     public Job createJob() throws IOException {

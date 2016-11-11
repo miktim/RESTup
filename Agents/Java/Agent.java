@@ -3,8 +3,8 @@ package org.net.restupAgent;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
 /**
- * The agent provides access to the RESTup server services.
+ * Agent provides access to the RESTup server services.
  */
   public class Agent {
 //    static final String USER_AGENT_VERSION = "RESTupAgent/61100";
@@ -41,7 +41,7 @@ import javax.xml.parsers.DocumentBuilder;
     }
 /**
  * Get a list of services that are supported by the server.
- * @return array of RESTup Service objects
+ * @return array of Service objects
  */
     public Service[] listServices() throws IOException {
       return Service.getServiceListByURL(this.serverURL);

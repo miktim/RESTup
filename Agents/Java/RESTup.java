@@ -3,8 +3,8 @@ package org.net.restupAgent;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+//import java.net.MalformedURLException;
+//import java.net.ProtocolException;
 
 import java.io.File;
 import java.io.FileInputStream;
