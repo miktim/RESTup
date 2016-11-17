@@ -15,10 +15,11 @@ Server has an experimental WebDAV-based UI. An interface is a set of remote fold
 with corresponding services. The service folder contains subfolders for input and output files.
 UI can be accesed via WebDAV clients: Windows Explorer, Gnome Nautilus etc.
 
-Package include freeware-based examples (Linux/Windows) and Oracle-XE compatible PL/SQL & Java API (agents). 
+Project include java, PL/SQL (Oracle-XE compatible) agents (APIs) and freeware-based config 
+examples (Linux/Windows). 
 Examples require installed LibreOffice (4.x for Windows platform script) & Tesseract OCR. 
 
-Package contains:
+Contents:
 
 /RESTup_server_v1.3_xxxx_RU.pdf  ; documentation (sorry me - in Russian only)
 /RESTupServer.jar                ; server 
