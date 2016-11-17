@@ -1,10 +1,12 @@
-+  correct html error reason phrases according RFC;
-+  noop instead error when no jobFiles and jobQuota > 0;
-+  take WindowsXP short path from environment var %TEMP%;
-+- spaces in paths (?);
--  catch and explain init port exceptions (Security, Busy);
--  DAV: replace 404 with 410 Gone (?);
--  Log: decode external programs STDERR according consoleEncoding;
+.61111
++  Sec: check ../ in URL and job parameters;
++  java agent added, oracle package renamed;
++  echo bash script updated.
+
+-  trusted RESTup servers, load balansing, redirect/proxy...;
+-  build-in unzip/zip;
+-  spaces in paths;
 -  Config: add multipliers (Kilo, Mega, Giga) to jobQuota, (Minutes) to jobsLifeTime, jobTimeOut values; 
-+  add build.sh, correct build.bat.
--  ?build-in unzip/zip
+-  ? catch and explain init port exceptions (Security, Busy);
+-  ? DAV: replace 404 with 410 Gone;
+-  ? Log: Windows decode external programs STDERR according consoleEncoding;
