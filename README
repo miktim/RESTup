@@ -1,6 +1,6 @@
 # RESTup v1.3
 
-Lightweight pure JavaSE/6 server provides a RESTful API to the console applications 
+Lightweight pure JavaSE/6 WEB server provides a RESTful API to the console applications 
 (hereinafter - services). 
 Interaction with the server is performed according to the following general scheme:
 - get a list of services (GET), to determine the URI of the service;
