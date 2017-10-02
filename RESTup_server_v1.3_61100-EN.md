@@ -63,19 +63,43 @@ The configuration files contain examples of services that are based on free soft
 
 The configuration files are configured to run scripts from the current (shared with the configuration file) directory.
 
-3.2 To start the server requires JavaSE jre or openJDK runtime 1.6 and later.
+3.2 To start the server requires JavaSE jre or openJDK runtime 1.6 or later.
 
-```java [-Dkey = value] -jar [path] RESTupServer.jar```
+```java [-Dkey=value] -jar [path]RESTupServer.jar```
 
 Default keys and values:
 
 | Key | Value |
 | --- | --- |
-| consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding = cp866 .|
-| davEnable | yes/(no) Enables / disables the WebDAV interface.|
+| consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
+| davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
 #### 4. RESTful API
 
 API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the header and response body fields. Exchange with the server is in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
+...
+
+#### 5. User interface (experiment)
+
+The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user files is determined by the service assigned to the folder. Operating principle:
+ - select the service folder;
+ - copy the source files to the "% inFolderName%" subfolder;
+ - return the result from the subfolder "% outFolderName%".
+
+Information about the connected services and the limitations of the user session is found in the help file of the root folder of the server.
+
+**IMPORTANT:** in this version, the user is identified by an IP or host name or a combination of X-Forwarded-For + Via request header values.
+...
+
+#### 6. Agents
+
+Agents provide a program interface (API) with a console application server.
+
+6.1 Oracle PL/SQL API. RESTUP_AGENT package
+...
+
+6.2 Java agent. org.net.restupAgent package
+...
+
