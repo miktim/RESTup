@@ -25,8 +25,8 @@ The server configuration is stored in the RESTupConfig.xml file, which is taken 
 jobCommand = "CMD / C xcopy %inFilesDir%%jobParams% %outFilesDir% / E / Y / Q"
 fileExts = "" debug = "off" jobDefaults = "*.*" jobQuota = "500000" commandTimeout = "10">
 Echo service. Returns the job file(s) by the mask defined by the job parameter.
-</ service>
-</ server>
+</service>
+</server>
 ```
 **2.1 Server parameters (default values are given in brackets):**
 
@@ -39,7 +39,7 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 | debugLevel | details debugging information output to the console 0 - 2 (1) |
 
 
-**2.2 Service parameters: **
+**2.2 Service parameters:**
 
 | Parameter | Description |
 | --- | --- |
@@ -80,7 +80,7 @@ API implements the actions listed in Clause 1. The parameters are passed by the 
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
 
-**4.1 Get a list of services **
+**4.1 Get a list of services**
 
 Client Request:
 ``` 
@@ -130,7 +130,7 @@ Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
 Content-Length: 0
 
 ```
-**4.3 Transfer job file **
+**4.3 Transfer job file**
 
 Client Request:
 ```
@@ -295,9 +295,9 @@ Folders marked with "-" are used for grouping purposes and are read-only.
 (c) 2015 miktim@mail.ru  Translated by Google(R).
 ```
 
-##### 5.2 Connecting to the server
+**5.2 Connecting to the server**
 
-###### 5.2.1 Mount remote folder from client console
+5.2.1 Mount remote folder from client console
 
 Windows (XP, Vista does not allow port 80 override): 
 ```
@@ -311,15 +311,15 @@ OpenSUSE:
 ```
 $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
 ```
-###### 5.2.2 Connect to the server from file managers...
+5.2.2 Connect to the server from file managers...
 
 #### 6. Agents
 
 Agents provide a program interface (API) with a console application server.
 
-6.1 Oracle PL/SQL API. RESTUP_AGENT package
+**6.1 Oracle PL/SQL API. RESTUP_AGENT package**
 ...
 
-6.2 Java agent. org.net.restupAgent package
+**6.2 Java agent. org.net.restupAgent package**
 ...
 
