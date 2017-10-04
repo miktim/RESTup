@@ -81,6 +81,8 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
+To verify the health of the server in the address bar of any web browser type: http:////<host>:<port>/restup
+
 #### 4. HTTP RESTful API
 
 API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with the server is performed using HTTP protocol in UTF-8 encoding. Returned success codes: 200, 201, 204.
@@ -137,7 +139,7 @@ Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
 Content-Length: 0
 
 ```
-**4.3 Transfer job file**
+**4.3 Put job file**
 
 Client Request:
 ```HTTP
@@ -154,9 +156,9 @@ HTTP/1.1 204 No Content
 ...
 Content-Length: 0
 ```
-**4.4 Run the job, get the URI of the result files.**
+**4.4 Execute the job, get the URI of the result files.**
 
-In the body of the request, you can specify a string of user-defined job parameters.
+In the body of the request, you can specify a string of user-defined job parameters. Server waits for job completion, then delete job files and return uri of result files.
 
 Client Request:
 ```HTTP
@@ -183,7 +185,7 @@ Host: localhost:8080
 Accept: text/xml
 Content-Length: 0
 ```
-Server Response:
+Server Response (subfolders name, if any, ended with /):
 ```HTTP
 HTTP/1.1 200 OK
 ...
