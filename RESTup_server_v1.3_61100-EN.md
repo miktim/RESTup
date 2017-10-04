@@ -2,7 +2,7 @@
 
 #### 1. Purpose
 
-RESTup - JavaSE / 6 WEB server provides a RESTful API to the console applications of the operating system (hereinafter referred to as services).
+RESTup - JavaSE / 6 HTTP server provides a RESTful API to the console applications of the operating system (hereinafter referred to as services).
 Interaction with the server is performed according to the following general scheme:
 - get a list of services (GET), determine the URI of the service;
 - create a task for the service (POST), get a URI for the job files;
@@ -24,7 +24,7 @@ The server configuration is stored in the RESTupConfig.xml file, which is taken 
 <service name = "Echo"
 jobCommand = "CMD / C xcopy %inFilesDir%%jobParams% %outFilesDir% / E / Y / Q"
 fileExts = "" debug = "off" jobDefaults = "*.*" jobQuota = "500000" commandTimeout = "10">
-Echo service. Returns the job file (s) by the mask defined by the job parameter.
+Echo service. Returns the job file(s) by the mask defined by the job parameter.
 </ service>
 </ server>
 ```
@@ -76,17 +76,168 @@ Default keys and values:
 
 #### 4. RESTful API
 
-API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the header and response body fields. Exchange with the server is in UTF-8 encoding. Returned success codes: 200, 201, 204.
+API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the header and response body fields. Exchange with the server is performed using HTTP protocol in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
+
+**4.1 Get a list of services**
+
+Client Request:
+```
+GET /restup/ HTTP/1.1
+Host: localhost:8080
+Accept: text/xml
+Content-Length: 0
+```
+Server Response:
+```
+HTTP/1.1 200 OK
+Server: RESTup/1.3.xxxx
+Connection: close
+Content-Type: text/xml; charset = utf-8
+Content-Length: xxxxx
+
+<?xml version="1.0" encoding="utf-8"?>
+<restup>
+  <service>
+    <uri>http://localhost:8080/restup/echo/</uri>
+    <name>Echo</name>
+    <fileExts/>
+    <jobQuota>500000</jobQuota>
+    <jobDefaults>*.*</jobDefaults>
+    <abstract>
+    Echo service. Returns the job file(s) by the mask defined by the job parameter.
+    </abstract>
+  </service>
 ...
+</restup>
+```
+
+**4.2 Create a job for the service, get the URI for the job files.**
+
+Client Request:
+```
+POST /restup/echo/ HTTP/1.1
+Host: localhost:8080
+Content-Length: 0
+
+```
+Server Response:
+```
+HTTP/1.1 201 Created
+...
+Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
+Content-Length: 0
+
+```
+**4.3 Transfer job file**
+
+Client Request:
+```
+PUT /restup/echo/add03ead02c9bec8/in/phototest.tif HTTP/1.1
+Host: localhost:8080
+Content-Type: application/octet-stream
+Content-Length: xxxxx
+
+binary file content
+```
+Server Response:
+```
+HTTP/1.1 204 No Content        
+...
+Content-Length: 0
+
+```
+**4.4 Run the job, get the URI of the result files, delete the job files.**
+
+In the body of the request, you can specify a string of user-defined job parameters
+
+Client Request:
+```
+POST /restup/echo/add03ead02c9bec8/in HTTP/1.1
+Host: localhost:8080
+Content-Type: text/plain; charset=utf-8 
+Content-Length: 5
+
+*.tif
+```
+Server Response:
+```
+HTTP/1.1 201 Created
+...
+Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
+Content-Length: 0
+
+```
+**4.5 Get a list of result files.**
+
+Client Request:
+```
+GET /restup/echo/add03ead02c9bec8/out/ HTTP/1.1
+Host: localhost:8080
+Accept: text/xml
+Content-Length: 0
+
+```
+Server Response:
+```
+HTTP/1.1 200 OK
+...
+Content-Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
+Сontent-Type: text/xml; charset=”utf-8” 
+Content-Length: xxxxx
+
+<?xml version=”1.0” encoding=”utf-8”?>
+<restup_out>
+  <file>
+    <name>phototest.tif</name>
+    <size>12345</size>
+  </file>
+...
+</restup_out>
+```
+**4.6 Get the result file.**
+
+Client Request:
+```
+GET /restup/echo/add03ead02c9bec8/out/phototest.tif HTTP/1.1
+Host: localhost:8080
+Content-Length: 0
+
+```
+Server Response:
+```
+HTTP/1.1 200 OK
+...
+Content-Type: application/octet-stream
+Content-Length: xxxxx
+
+binary file content
+```
+**4.7 Delete job.**
+
+Client Request:
+```
+DELETE /restup/echo/add03ead02c9bec8/ HTTP/1.1
+Host: localhost:8080
+Content-Length: 0
+
+```
+Server Response:
+```
+HTTP/1.1 204 No Content
+...
+Content-Length: 0
+
+```
 
 #### 5. User interface (experiment)
 
 The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user files is determined by the service assigned to the folder. Operating principle:
+ - connect to the server (mount remote folder);
  - select the service folder;
- - copy the source files to the "% inFolderName%" subfolder;
- - return the result from the subfolder "% outFolderName%".
+ - copy the source files to the "%inFolderName%" subfolder;
+ - return the result from the subfolder "%outFolderName%".
 
 Information about the connected services and the limitations of the user session is found in the help file of the root folder of the server.
 
