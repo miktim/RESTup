@@ -2,7 +2,7 @@
 
 #### 1. Purpose
 
-RESTup - JavaSE / 6 HTTP server provides a RESTful API to the console applications of the operating system (hereinafter referred to as services).
+RESTup - JavaSE/6 HTTP server provides a RESTful API to the console applications of the operating system (hereinafter referred to as services).
 Interaction with the server is performed according to the following general scheme:
 - get a list of services (GET), determine the URI of the service;
 - create a task for the service (POST), get a URI for the job files;
@@ -74,23 +74,23 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
-#### 4. RESTful API
+#### 4. HTTP RESTful API
 
-API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the header and response body fields. Exchange with the server is performed using HTTP protocol in UTF-8 encoding. Returned success codes: 200, 201, 204.
+API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with the server is performed using HTTP protocol in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
 
 **4.1 Get a list of services**
 
 Client Request:
-``` 
+```HTTP 
 GET /restup/ HTTP/1.1
 Host: localhost:8080
 Accept: text/xml
 Content-Length: 0
 ```
 Server Response:
-``` 
+```HTTP 
 HTTP/1.1 200 OK
 Server: RESTup/1.3.xxxx
 Connection: close
@@ -116,14 +116,14 @@ Content-Length: xxxxx
 **4.2 Create a job for the service, get the URI for the job files.**
 
 Client Request:
-```
+```HTTP
 POST /restup/echo/ HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 201 Created
 ...
 Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
@@ -133,7 +133,7 @@ Content-Length: 0
 **4.3 Transfer job file**
 
 Client Request:
-```
+```HTTP
 PUT /restup/echo/add03ead02c9bec8/in/phototest.tif HTTP/1.1
 Host: localhost:8080
 Content-Type: application/octet-stream
@@ -142,7 +142,7 @@ Content-Length: xxxxx
 binary file content
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 204 No Content        
 ...
 Content-Length: 0
@@ -152,7 +152,7 @@ Content-Length: 0
 In the body of the request, you can specify a string of user-defined job parameters.
 
 Client Request:
-```
+```HTTP
 POST /restup/echo/add03ead02c9bec8/in HTTP/1.1
 Host: localhost:8080
 Content-Type: text/plain; charset=utf-8 
@@ -161,7 +161,7 @@ Content-Length: 5
 *.tif
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 201 Created
 ...
 Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
@@ -170,14 +170,14 @@ Content-Length: 0
 **4.5 Get a list of result files.**
 
 Client Request:
-```
+```HTTP
 GET /restup/echo/add03ead02c9bec8/out/ HTTP/1.1
 Host: localhost:8080
 Accept: text/xml
 Content-Length: 0
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 200 OK
 ...
 Content-Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
@@ -196,13 +196,13 @@ Content-Length: xxxxx
 **4.6 Get the result file.**
 
 Client Request:
-```
+```HTTP
 GET /restup/echo/add03ead02c9bec8/out/phototest.tif HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 200 OK
 ...
 Content-Type: application/octet-stream
@@ -213,13 +213,13 @@ binary file content
 **4.7 Delete the job.**
 
 Client Request:
-```
+```HTTP
 DELETE /restup/echo/add03ead02c9bec8/ HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 ```
 Server Response:
-```
+```HTTP
 HTTP/1.1 204 No Content
 ...
 Content-Length: 0
@@ -245,7 +245,7 @@ Interface settings are stored in the corresponding section of the server configu
 <server ...>
 <service .../>
 ...
-<davInterface sessionTimeout=“240” sessionQuota=”100000” helpFileTemplate=”.\Help.txt”>
+<davInterface sessionTimeout=“240” sessionQuota=”100000” helpFileTemplate=”..\Source\Help-en.txt”>
 <folder uri=”/Test/Echo” serviceName=”Echo” jobParams=””>
 Debug echo service.
 </folder>
@@ -261,7 +261,7 @@ Parameters of the WebDAV interface:
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %. See Help-en.txt in the Source subfolder|
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See ./Source/Help-en.txt|
 
 WebDAV Servce Folder Options:
 
@@ -279,20 +279,26 @@ Text of the 'folder' node contains abstract.
 
 ```
 Windows (XP, Vista does not allow port 80 override): 
-  C:>net use <drive_letter> \\host[:port]\restup\dav
+  C:>net use <drive_letter> \\<host>[:<port>]\restup\dav
 
 Ubuntu:
-  $ sudo mount -t davfs -o rw,guid=users http://<host>:<port>/restup/dav <mount_point>
+  $ sudo mount -t davfs -o rw,guid=users http://<host>[:<port>]/restup/dav <mount_point>
 
 openSUSE:
-  $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
+  $ sudo wdfs http://<host>[:<port>]/restup/dav <mount_point> -o umask=0770
 ```
 5.2.2 Connecting to the server from file managers
 
-Windows Explorer: map network drive to '\\\\host\[:port]\restup\dav'<br>
-Ubuntu Gnome Nautilus: connect to server 'dav://host:port/restup/dav'<br>
-openSUSE KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/restup/dav'
-
+```
+Windows Explorer (XP, Vista does not allow port 80 override):
+  map network drive to '\\<host>[:<port>]\restup\dav'
+  
+Ubuntu Gnome Nautilus:
+  connect to server 'dav://<host>[:<port>]/restup/dav'
+  
+openSUSE KDE Dolphin, Konqueror:
+  in the address bar enter 'webdav://<host>[:<port>]/restup/dav'
+```
 **NOTE:** File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
@@ -300,8 +306,15 @@ openSUSE KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/re
 Agents provide a program interface (API) with a console application server.
 
 **6.1 Oracle PL/SQL API. RESTUP_AGENT package**
-...
+
+The restup_agent package (restup_agent.sql) is an add-on over the Oracle apex_web_service API. The package is self-documented and compatible with Oracle-XE 11g.
+
+Before using this package, the Oracle administrator must to allow access to the RESTup server (see [DBMS_NETWORK_ACL_ADMIN](http://docs.oracle.com/cd/B28359_01/appdev.111/b28419/d_networkacl_adm.htm#CHDJFJFF)). 
+
+Example of use: [./Agents/Oracle/restup_agent_test.sql](https://github.com/miktim/RESTup/blob/master/Agents/Oracle/restup_agent_test.sql)
 
 **6.2 Java agent. org.net.restupAgent package**
-...
+
+The package is delivered as a jar-file and in the source. Documentation in javadoc format is available after compiling. Example of use:
+[./Agents/Java/RESTupClient.java](https://github.com/miktim/RESTup/blob/master/Agents/Java/RESTupClient.java)
 
