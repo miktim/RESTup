@@ -313,9 +313,9 @@ $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
 ```
 5.2.2 Connecting to the server from file managers
 
-Windows (XP, Vista, 7, 8, 10) Explorer: map network drive to '\\host\[:port]\restup\dav'
-Linux Gnome Nautilus: connect to server 'dav://host:port/restup/dav'
-Linux KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/restup/dav'
+Windows (XP, Vista, 7, 8, 10) Explorer: map network drive to '\\host\[:port]\restup\dav'<br>
+Linux Gnome Nautilus: connect to server 'dav://host:port/restup/dav'<br>
+Linux KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/restup/dav'<br>
 **NOTE:** File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
