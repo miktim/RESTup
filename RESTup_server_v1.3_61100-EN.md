@@ -53,17 +53,24 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 
 Text of the 'service' node contains abstract.
 
-#### 3. Installing and starting the server
+**2.3 PRE-Configured services (may vary)**
 
-3.1 The installation of the server is to configure the configuration file.
-
-The configuration files contain examples of services that are based on free software, which in turn must be pre-installed in the default directories:
+The configuration files (linx/windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
 - LibreOffice (4.2 for Windows .js): http://libreoffice.org/ ;
 - Tesseract-OCR: https://code.google.com/p/tesseract-ocr/ .
 
-The configuration files are configured to run scripts from the current (shared with the configuration file) directory.
+| Service name | Abstract |
+| --- | --- |
+| Office2pdf | Convert office documents to Adobe PDF format |
+| Office2html | Convert office documents to html |
+| Office2ooxml | Convert office documents (ODF) to MS Office 2007 (OOXML) |
+| Office2mso97 | Convert office documents (ODF) to MS Office 97 |
+| Tesseract-OCR | Optical Text Recognition (OCR) |
+| Echo | Debug echo service. Returns the job file(s) by the mask defined by the parameter |
+	
+#### 3. Starting the server
 
-3.2 To start the server requires JavaSE jre or openJDK runtime 1.6 or later.
+The server requires JavaSE jre or openJDK runtime 1.6 or later. Console command:
 
 ```java [-Dkey=value] -jar [path]RESTupServer.jar```
 
@@ -261,7 +268,7 @@ Parameters of the WebDAV interface:
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See ./Source/Help-en.txt|
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Source/Help-en.txt](https://github.com/miktim/RESTup/blob/master/Source/Help-en.txt)|
 
 WebDAV Servce Folder Options:
 
@@ -279,7 +286,7 @@ Text of the 'folder' node contains abstract.
 
 ```
 Windows (XP, Vista does not allow port 80 override): 
-  C:>net use <drive_letter> \\<host>[:<port>]\restup\dav
+  C:>net use <drive_letter:> \\<host>[:<port>]\restup\dav
 
 Ubuntu:
   $ sudo mount -t davfs -o rw,guid=users http://<host>[:<port>]/restup/dav <mount_point>
@@ -307,14 +314,12 @@ Agents provide a program interface (API) with a console application server.
 
 **6.1 Oracle PL/SQL API. RESTUP_AGENT package**
 
-The restup_agent package (restup_agent.sql) is an add-on over the Oracle apex_web_service API. The package is self-documented and compatible with Oracle-XE 11g.
+The restup_agent package (restup_agent.sql) is an add-on over the Oracle apex_web_service API. The package is self-documented and compatible with Oracle-XE 11g. Example of use: [./Agents/Oracle/restup_agent_test.sql](https://github.com/miktim/RESTup/blob/master/Agents/Oracle/restup_agent_test.sql)
 
-Before using this package, the Oracle administrator must to allow access to the RESTup server (see [DBMS_NETWORK_ACL_ADMIN](http://docs.oracle.com/cd/B28359_01/appdev.111/b28419/d_networkacl_adm.htm#CHDJFJFF)). 
-
-Example of use: [./Agents/Oracle/restup_agent_test.sql](https://github.com/miktim/RESTup/blob/master/Agents/Oracle/restup_agent_test.sql)
+Before using this package, the Oracle administrator must grant access to the RESTup server (see [DBMS_NETWORK_ACL_ADMIN](http://docs.oracle.com/cd/B28359_01/appdev.111/b28419/d_networkacl_adm.htm#CHDJFJFF)). 
 
 **6.2 Java agent. org.net.restupAgent package**
 
-The package is delivered as a jar-file and in the source. Documentation in javadoc format is available after compiling. Example of use:
+The package is delivered as a jar-file (restupAgent.jar) and in the source. Documentation in javadoc format is available after compiling. Example of use:
 [./Agents/Java/RESTupClient.java](https://github.com/miktim/RESTup/blob/master/Agents/Java/RESTupClient.java)
 
