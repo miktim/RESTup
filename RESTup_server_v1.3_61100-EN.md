@@ -28,7 +28,7 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 </ service>
 </ server>
 ```
-2.1 Server parameters (default values are given in brackets):
+**2.1 Server parameters (default values are given in brackets):**
 
 | Parameter | Description |
 | --- | --- |
@@ -39,7 +39,7 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 | debugLevel | details debugging information output to the console 0 - 2 (1) |
 
 
-2.2 Service parameters:
+**2.2 Service parameters: **
 
 | Parameter | Description |
 | --- | --- |
@@ -80,7 +80,7 @@ API implements the actions listed in Clause 1. The parameters are passed by the 
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
 
-**4.1 Get a list of services**
+**4.1 Get a list of services **
 
 Client Request:
 ``` 
@@ -130,7 +130,7 @@ Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
 Content-Length: 0
 
 ```
-**4.3 Transfer job file**
+**4.3 Transfer job file **
 
 Client Request:
 ```
@@ -149,7 +149,7 @@ Content-Length: 0
 ```
 **4.4 Run the job, get the URI of the result files.**
 
-In the body of the request, you can specify a string of user-defined job parameters
+In the body of the request, you can specify a string of user-defined job parameters.
 
 Client Request:
 ```
@@ -237,10 +237,10 @@ Information about the connected services and the limitations of the user session
 
 **IMPORTANT:** in this version, the user is identified by an IP or host name or a combination of X-Forwarded-For + Via request header values.
 
-5.1 Configuring the WebDAV server interface.
+**5.1 Configuring the WebDAV server interface.**
 
 Interface settings are stored in the corresponding section of the server configuration file:
-```
+```xml
 <?xml version = "1.0" encoding = "Windows-1251"?>
 <server ...>
 <service .../>
@@ -263,13 +263,23 @@ Parameters of the WebDAV interface:
 | outFolderName | the name of the result files folder ("out") |
 | helpFileTemplate | text (utf-8 + BOM) help template file (built-in). |
 
-Help.txt example :
+WebDAV Servce Folder Options:
+
+| Option | Description |
+| --- | --- |
+| uri | unique relative uri (required), corresponds to the service folder.<br>Avoid spaces in the uri! |
+| serviceName | the name of the assigned service. If not specified, the folder is read-only.|
+| jobParams | job parameters (depend on service) |
+
+Text of the 'folder' node contains abstract.
+
+Help.txt example:
 ``` 
-%serverVersion% - RESTful server of console applications. WebDAV interface.
+**%serverVersion%** - RESTful server of console applications. WebDAV interface.
 
 The principle of the interface:
  - select the service folder;
- - copy the source files to the "%inFilesFolder%" subfolder;
+ - copy the source files to the "**%inFilesFolder%**" subfolder;
  - return the result from the subfolder "%outFilesFolder%",
    in some cases it is necessary to update its contents.
 
@@ -282,22 +292,12 @@ For them, valid extensions (types) of source files are specified,
 Folders marked with "-" are used for grouping purposes and are read-only.
 
 %foldersTree%
-2015, miktim@mail.ru  Translated by Google(R).
+(c) 2015 miktim@mail.ru  Translated by Google(R).
 ```
 
-WebDAV Servce Folder Options:
+##### 5.2 Connecting to the server
 
-| Option | Description |
-| --- | --- |
-| uri | unique relative uri (required), corresponds to the service folder.<br>Avoid spaces in the uri! |
-| serviceName | the name of the assigned service. If not specified, the folder is read-only.|
-| jobParams | job parameters (depend on service) |
-
-Text of the 'folder' node contains abstract.
-
-5.2 Connecting to the server
-
-5.2.1 Mount remote folder from client console
+###### 5.2.1 Mount remote folder from client console
 
 Windows (XP, Vista does not allow port 80 override): 
 ```
@@ -311,7 +311,7 @@ OpenSUSE:
 ```
 $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
 ```
-5.2.2 Connect to the server from file managers...
+###### 5.2.2 Connect to the server from file managers...
 
 #### 6. Agents
 
