@@ -275,11 +275,11 @@ Text of the 'folder' node contains abstract.
 
 Help.txt example:
 ``` 
-**%serverVersion%** - RESTful server of console applications. WebDAV interface.
+%serverVersion% - RESTful server of console applications. WebDAV interface.
 
 The principle of the interface:
  - select the service folder;
- - copy the source files to the "**%inFilesFolder%**" subfolder;
+ - copy the source files to the "%inFilesFolder%" subfolder;
  - return the result from the subfolder "%outFilesFolder%",
    in some cases it is necessary to update its contents.
 
@@ -292,7 +292,7 @@ For them, valid extensions (types) of source files are specified,
 Folders marked with "-" are used for grouping purposes and are read-only.
 
 %foldersTree%
-(c) 2015 miktim@mail.ru  Translated by Google(R).
+(c) 2015 miktim@mail.ru.  Translated by Google(R).
 ```
 
 **5.2 Connecting to the server**
@@ -311,7 +311,12 @@ OpenSUSE:
 ```
 $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
 ```
-5.2.2 Connect to the server from file managers...
+5.2.2 Connecting to the server from file managers
+
+Windows (XP, Vista, 7, 8, 10) Explorer: map network drive to '\\host\[:port]\restup\dav'
+Linux Gnome Nautilus: connect to server 'dav://host:port/restup/dav'
+Linux KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/restup/dav'
+**NOTE:** File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
 
