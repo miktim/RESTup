@@ -19,7 +19,7 @@ The server has an experimental user interface (UI) based on the WebDAV protocol.
 The server configuration is stored in the RESTupConfig.xml file, which is taken at startup from the current directory. Attribute names are case sensitive. Attribute values and their relationship are not controlled. The values of the spoolDir, jobCommand attributes depend on the runtime (Linux / Windows). The following is an example for the Windows platform:
 
 ```xml 
-<? xml version = "1.0" encoding = "Windows-1251"?>
+<?xml version = "1.0" encoding = "Windows-1251"?>
 <server port = "8080" maxJobsStarted = "4" jobsLifeTime = "240" debugLevel = "0">
 <service name = "Echo"
 jobCommand = "CMD / C xcopy %inFilesDir%%jobParams% %outFilesDir% / E / Y / Q"
@@ -142,7 +142,8 @@ Content-Length: xxxxx
 binary file content
 ```
 Server Response:
-```HTTP/1.1 204 No Content        
+```
+HTTP/1.1 204 No Content        
 ...
 Content-Length: 0
 ```
@@ -226,7 +227,7 @@ Content-Length: 0
 
 #### 5. User interface (experiment)
 
-The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user files is determined by the service assigned to the folder. Operating principle:
+The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user job files is determined by the service assigned to the folder. Operating principle:
  - connect to the server (mount remote folder /restup/dav/);
  - select the service folder;
  - copy the source files to the "%inFolderName%" subfolder;
@@ -240,6 +241,7 @@ Information about the connected services and the limitations of the user session
 
 Interface settings are stored in the corresponding section of the server configuration file:
 ```
+<?xml version = "1.0" encoding = "Windows-1251"?>
 <server ...>
 <service .../>
 ...
@@ -252,6 +254,7 @@ Debug echo service.
 </server>
 ```
 Parameters of the WebDAV interface:
+
 | Parameter | Description |
 | --- | --- |
 | sessionTimeout | session timeout in seconds (= jobsLifeTime) |
@@ -283,9 +286,10 @@ Folders marked with "-" are used for grouping purposes and are read-only.
 ```
 
 WebDAV Servce Folder Options:
+
 | Option | Description |
 | --- | --- |
-| uri | unique relative uri (required). Corresponds to the service folder.<br>Avoid spaces in the uri! |
+| uri | unique relative uri (required), corresponds to the service folder.<br>Avoid spaces in the uri! |
 | serviceName | the name of the assigned service. If not specified, the folder is read-only.|
 | jobParams | job parameters (depend on service) |
 
