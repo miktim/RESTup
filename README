@@ -21,7 +21,7 @@ Examples require installed LibreOffice (4.x for Windows platform script) & Tesse
 
 Contents:
 
-/RESTup_server_v1.3_xxxx_RU.pdf  ; documentation (sorry me - in Russian only)
+/RESTup_server_v1.3_xxxx-EN.MD   ; documentation
 /RESTupServer.jar                ; server 
 /ServerStart.bat                 ; starting script for Windows
 /ServerStart.sh                  ; starting script for Linux
