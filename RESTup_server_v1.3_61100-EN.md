@@ -261,7 +261,7 @@ Parameters of the WebDAV interface:
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | text (utf-8 + BOM) help template file (built-in). |
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %. See Help_en.txt|
 
 WebDAV Servce Folder Options:
 
