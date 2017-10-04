@@ -28,7 +28,7 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 </ service>
 </ server>
 ```
-Server parameters (default values are given in brackets):
+**2.1 Server parameters (default values are given in brackets):**
 
 | Parameter | Description |
 | --- | --- |
@@ -39,7 +39,7 @@ Server parameters (default values are given in brackets):
 | debugLevel | details debugging information output to the console 0 - 2 (1) |
 
 
-Service parameters:
+**2.2 Service parameters:**
 
 | Parameter | Description |
 | --- | --- |
@@ -83,15 +83,13 @@ If the Host field is missing from the client request header, Error 400 (Bad Requ
 **4.1 Get a list of services**
 
 Client Request:
-```
-GET /restup/ HTTP/1.1
+```GET /restup/ HTTP/1.1
 Host: localhost:8080
 Accept: text/xml
 Content-Length: 0
 ```
 Server Response:
-```
-HTTP/1.1 200 OK
+```HTTP/1.1 200 OK
 Server: RESTup/1.3.xxxx
 Connection: close
 Content-Type: text/xml; charset = utf-8
@@ -110,21 +108,18 @@ Content-Length: xxxxx
     </abstract>
   </service>
 ...
-</restup>
-```
+</restup>```
 
 **4.2 Create a job for the service, get the URI for the job files.**
 
 Client Request:
-```
-POST /restup/echo/ HTTP/1.1
+```POST /restup/echo/ HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 
 ```
 Server Response:
-```
-HTTP/1.1 201 Created
+```HTTP/1.1 201 Created
 ...
 Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
 Content-Length: 0
@@ -133,17 +128,14 @@ Content-Length: 0
 **4.3 Transfer job file**
 
 Client Request:
-```
-PUT /restup/echo/add03ead02c9bec8/in/phototest.tif HTTP/1.1
+```PUT /restup/echo/add03ead02c9bec8/in/phototest.tif HTTP/1.1
 Host: localhost:8080
 Content-Type: application/octet-stream
 Content-Length: xxxxx
 
-binary file content
-```
+binary file content```
 Server Response:
-```
-HTTP/1.1 204 No Content        
+```HTTP/1.1 204 No Content        
 ...
 Content-Length: 0
 
@@ -153,17 +145,14 @@ Content-Length: 0
 In the body of the request, you can specify a string of user-defined job parameters
 
 Client Request:
-```
-POST /restup/echo/add03ead02c9bec8/in HTTP/1.1
+```POST /restup/echo/add03ead02c9bec8/in HTTP/1.1
 Host: localhost:8080
 Content-Type: text/plain; charset=utf-8 
 Content-Length: 5
 
-*.tif
-```
+*.tif```
 Server Response:
-```
-HTTP/1.1 201 Created
+```HTTP/1.1 201 Created
 ...
 Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
 Content-Length: 0
@@ -172,16 +161,14 @@ Content-Length: 0
 **4.5 Get a list of result files.**
 
 Client Request:
-```
-GET /restup/echo/add03ead02c9bec8/out/ HTTP/1.1
+```GET /restup/echo/add03ead02c9bec8/out/ HTTP/1.1
 Host: localhost:8080
 Accept: text/xml
 Content-Length: 0
 
 ```
 Server Response:
-```
-HTTP/1.1 200 OK
+```HTTP/1.1 200 OK
 ...
 Content-Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
 Сontent-Type: text/xml; charset=”utf-8” 
@@ -194,38 +181,32 @@ Content-Length: xxxxx
     <size>12345</size>
   </file>
 ...
-</restup_out>
-```
+</restup_out>```
 **4.6 Get the result file.**
 
 Client Request:
-```
-GET /restup/echo/add03ead02c9bec8/out/phototest.tif HTTP/1.1
+```GET /restup/echo/add03ead02c9bec8/out/phototest.tif HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 
 ```
 Server Response:
-```
-HTTP/1.1 200 OK
+```HTTP/1.1 200 OK
 ...
 Content-Type: application/octet-stream
 Content-Length: xxxxx
 
-binary file content
-```
+binary file content```
 **4.7 Delete job.**
 
 Client Request:
-```
-DELETE /restup/echo/add03ead02c9bec8/ HTTP/1.1
+```DELETE /restup/echo/add03ead02c9bec8/ HTTP/1.1
 Host: localhost:8080
 Content-Length: 0
 
 ```
 Server Response:
-```
-HTTP/1.1 204 No Content
+```HTTP/1.1 204 No Content
 ...
 Content-Length: 0
 
@@ -234,10 +215,10 @@ Content-Length: 0
 #### 5. User interface (experiment)
 
 The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user files is determined by the service assigned to the folder. Operating principle:
- - connect to the server (mount remote folder);
+ - connect to the server (mount remote folder /restup/dav/);
  - select the service folder;
  - copy the source files to the "%inFolderName%" subfolder;
- - return the result from the subfolder "%outFolderName%".
+ - return the result files from the subfolder "%outFolderName%".
 
 Information about the connected services and the limitations of the user session is found in the help file of the root folder of the server.
 
