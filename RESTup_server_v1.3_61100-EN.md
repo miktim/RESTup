@@ -139,7 +139,8 @@ Host: localhost:8080
 Content-Type: application/octet-stream
 Content-Length: xxxxx
 
-binary file content```
+binary file content
+```
 Server Response:
 ```HTTP/1.1 204 No Content        
 ...
@@ -234,7 +235,79 @@ The user interface is based on WebDAV class 1 protocol. The interface is a set o
 Information about the connected services and the limitations of the user session is found in the help file of the root folder of the server.
 
 **IMPORTANT:** in this version, the user is identified by an IP or host name or a combination of X-Forwarded-For + Via request header values.
+
+5.1 Configuring the WebDAV server interface.
+
+Interface settings are stored in the corresponding section of the server configuration file:
+```
+<server ...>
+<service .../>
 ...
+<davInterface sessionTimeout=“240” sessionQuota=”100000” helpFileTemplate=”.\Help.txt”>
+<folder uri=”/Test/Echo” serviceName=”Echo” jobParams=””>
+Debug echo service.
+</folder>
+...
+</davInterface>
+</server>
+```
+Parameters of the WebDAV interface:
+| Parameter | Description |
+| --- | --- |
+| sessionTimeout | session timeout in seconds (= jobsLifeTime) |
+| sessionQuota | limit the total files size of bytes (2 gigabytes) |
+| inFolderName | the name of the job files folder ("in") |
+| outFolderName | the name of the result files folder ("out") |
+| helpFileTemplate | text (utf-8 + BOM) help template file (built-in). |
+
+Help.txt example :
+``` 
+%serverVersion% - RESTful server of console applications. WebDAV interface.
+
+The principle of the interface:
+ - select the service folder;
+ - copy the source files to the "%inFilesFolder%" subfolder;
+ - return the result from the subfolder "%outFilesFolder%",
+   in some cases it is necessary to update its contents.
+
+The total size of your files is limited to %sessionQuota% MiB, 
+and the storage time is %sessionTimeout% min.
+
+In the list below the service folders are marked with a "+" sign.
+For them, valid extensions (types) of source files are specified,
+(*) means "any file", including the creation of subdirectories.
+Folders marked with "-" are used for grouping purposes and are read-only.
+
+%foldersTree%
+2015, miktim@mail.ru  Translated by Google(R).
+```
+
+WebDAV Servce Folder Options:
+| Option | Description |
+| --- | --- |
+| uri | unique relative uri (required). Corresponds to the service folder.<br>Avoid spaces in the uri! |
+| serviceName | the name of the assigned service. If not specified, the folder is read-only.|
+| jobParams | job parameters (depend on service) |
+
+Text of the 'folder' node contains abstract.
+
+5.2 Connecting to the server
+
+5.2.1 Mount remote folder from client console
+
+Windows (XP, Vista does not allow port 80 override): 
+```
+C:>net use <drive_letter> \\host[:port]\restup\dav
+```
+Ubuntu:
+```
+$ sudo mount -t davfs -o rw,guid=users http://<host>:<port>/restup/dav <mount_point>
+```
+OpenSUSE:
+```
+$ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
+```
+5.2.2 Connect to the server from file managers...
 
 #### 6. Agents
 
