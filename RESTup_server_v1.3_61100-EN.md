@@ -261,7 +261,7 @@ Parameters of the WebDAV interface:
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %. See Help_en.txt|
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %. See Help-en.txt in the Source subfolder|
 
 WebDAV Servce Folder Options:
 
@@ -273,47 +273,23 @@ WebDAV Servce Folder Options:
 
 Text of the 'folder' node contains abstract.
 
-Help.txt example:
-``` 
-%serverVersion% - RESTful server of console applications. WebDAV interface.
-
-The principle of the interface:
- - select the service folder;
- - copy the source files to the "%inFilesFolder%" subfolder;
- - return the result from the subfolder "%outFilesFolder%",
-   in some cases it is necessary to update its contents.
-
-The total size of your files is limited to %sessionQuota% MiB, 
-and the storage time is %sessionTimeout% min.
-
-In the list below the service folders are marked with a "+" sign.
-For them, valid extensions (types) of source files are specified,
-(*) means "any file", including the creation of subdirectories.
-Folders marked with "-" are used for grouping purposes and are read-only.
-
-%foldersTree%
-(c) 2015 miktim@mail.ru.  Translated by Google(R).
-```
-
 **5.2 Connecting to the server**
 
 5.2.1 Mount remote folder from client console
 
+```
 Windows (XP, Vista does not allow port 80 override): 
-```
-C:>net use <drive_letter> \\host[:port]\restup\dav
-```
+  C:>net use <drive_letter> \\host[:port]\restup\dav
+
 Ubuntu:
-```
-$ sudo mount -t davfs -o rw,guid=users http://<host>:<port>/restup/dav <mount_point>
-```
+  $ sudo mount -t davfs -o rw,guid=users http://<host>:<port>/restup/dav <mount_point>
+
 openSUSE:
-```
-$ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
+  $ sudo wdfs http://<host>:<port>/restup/dav <mount_point> -o umask=0770
 ```
 5.2.2 Connecting to the server from file managers
 
-Windows (XP, Vista, 7, 8, 10) Explorer: map network drive to '\\\\host\[:port]\restup\dav'<br>
+Windows Explorer: map network drive to '\\\\host\[:port]\restup\dav'<br>
 Ubuntu Gnome Nautilus: connect to server 'dav://host:port/restup/dav'<br>
 openSUSE KDE Dolphin, Konqueror: in the address bar enter 'webdav://host:port/restup/dav'
 
