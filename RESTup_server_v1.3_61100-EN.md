@@ -22,7 +22,7 @@ The server configuration is stored in the RESTupConfig.xml file, which is taken 
 <?xml version = "1.0" encoding = "Windows-1251"?>
 <server port = "8080" maxJobsStarted = "4" jobsLifeTime = "240" debugLevel = "0">
 <service name = "Echo"
-jobCommand = "CMD / C xcopy %inFilesDir%%jobParams% %outFilesDir% / E / Y / Q"
+jobCommand = "CMD /C xcopy %inFilesDir%%jobParams% %outFilesDir% /E /Y /Q"
 fileExts = "" debug = "off" jobDefaults = "*.*" jobQuota = "500000" commandTimeout = "10">
 Echo service. Returns the job file(s) by the mask defined by the job parameter.
 </service>
@@ -81,7 +81,7 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
-To verify the health of the server in the address bar of any web browser type: http://<host>:<port>/restup
+To verify the health of the server type in the address bar of any web browser: http://\<host\>:\<port\>/restup
 
 #### 4. HTTP RESTful API
 
