@@ -81,7 +81,7 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
-To verify the health of the server in the address bar of any web browser type: http:////<host>:<port>/restup
+To verify the health of the server in the address bar of any web browser type: http://<host>:<port>/restup
 
 #### 4. HTTP RESTful API
 
