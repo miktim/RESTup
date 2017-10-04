@@ -48,4 +48,14 @@ begin
 -- free source LOB
   if dbms_lob.istemporary(l_sblob)=1
     then dbms_lob.freetemporary(l_sblob); end if;
+/* Console output (Oracle-XE 11g):
+200 http://server:8080/restup/echo/
+201 http://server:8080/restup/echo/905a69ab9313dae6/in/
+201 http://server:8080/restup/echo/905a69ab9313dae6/out/
+Test-file 2.tmp 123456
+200 0
+
+Statement processed.
+0.97 seconds
+*/
 end;
