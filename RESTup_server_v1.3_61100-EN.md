@@ -263,7 +263,7 @@ Debug echo service.
 </davInterface>
 </server>
 ```
-Parameters of the WebDAV interface:
+5.1.1 Parameters of the WebDAV interface:
 
 | Parameter | Description |
 | --- | --- |
@@ -273,7 +273,7 @@ Parameters of the WebDAV interface:
 | outFolderName | the name of the result files folder ("out") |
 | helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Source/Help-en.txt](https://github.com/miktim/RESTup/blob/master/Source/Help-en.txt)|
 
-WebDAV Servce Folder Options:
+5.1.2 WebDAV Servce Folder Options:
 
 | Option | Description |
 | --- | --- |
@@ -285,7 +285,7 @@ Text of the 'folder' node contains abstract.
 
 **5.2 Connecting to the server**
 
-Mount remote folder from client console
+5.2.1 Mount remote folder from client console
 
 ```
 Windows: 
@@ -298,7 +298,7 @@ openSUSE:
   $ sudo wdfs http://<host>[:<port>]/restup/dav <mount_point> -o umask=0770
 ```
 
-Connecting to the server from file managers
+5.2.2 Connecting to the server from file managers
 
 ```
 Windows Explorer:
