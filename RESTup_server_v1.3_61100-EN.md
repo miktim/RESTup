@@ -88,7 +88,7 @@ http://\<host\>:\<port\>/restup
 
 API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with server is done in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
-If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
+If the Host field is missing from the client request header, Error 400 (Bad Request) is returned. The URL of the request is validated against the top-level link ("dot-dot"). User-defined job parameter is checked for CR, LF and command continuation characters.
 
 **4.1 Get a list of services**
 
