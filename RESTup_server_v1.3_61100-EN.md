@@ -2,13 +2,13 @@
 
 #### 1. Purpose
 
-RESTup - JavaSE/6 HTTP server provides a RESTful API to the console applications of the operating system (hereinafter referred to as services).
-Interaction with the server is performed according to the following general scheme:
-- get a list of services (GET), determine the URI of the service;
-- create a task for the service (POST), get a URI for the job files;
-- transfer job file(s) (PUT);
+RESTup - JavaSE/6 HTTP server provides the RESTful API to the operating system console applications (hereinafter referred to as services).
+The following general pattern is used to communicate with the server:
+- get the list of services (GET), define service URI;
+- create a service job (POST), get the URI for the job files;
+- submit the job file(s) (PUT);
 - execute a parameterized job (POST), get the URI of the result files;
-- get a list of result files (GET);
+- get the list of result files (GET);
 - get the result file(s) (GET);
 - delete the job and associated files (DELETE).
 
@@ -32,11 +32,11 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 
 | Parameter | Description |
 | --- | --- |
-| port | port number of the listener (80). Listener listens to all available interfaces.<br>port = "1935", in case of port forwarding by the Linux command:<br> ``` iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 1935 ``` |
+| port | port number of the listener (80). Listener listens to all available interfaces.<br>port = "1935", in case of port forwarding by the Linux command:<br> ``` sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 1935 ``` |
 | spoolDir | the directory of the job files (the subdirectory restup_spool of the temporary files directory of the system). <br>Avoid spaces in the full path to the job directory!|
-| jobsLifeTime | the lifetime of jobs since creation (240) seconds. After the specified time, the job and the associated files are deleted.|
-| maxJobsStarted | the maximum number of executable external programs (2) If the number of executable external programs exceeds the allowable value, the job is queued for a time: <br>jobsLifeTime - commandTimeout - time_since_creation<br>after which it is deleted.|
-| debugLevel | details debugging information output to the console 0 - 2 (1) |
+| jobsLifeTime | the lifetime of jobs since creation in seconds (240). After the specified time, the job and the associated files are deleted.|
+| maxJobsStarted | the maximum number of executable external programs (2). If the number of executable external programs exceeds the allowable value, the job is queued for a time: <br>jobsLifeTime - commandTimeout - time_since_creation<br>after which it is deleted.|
+| debugLevel | The level of detail of debug information that is output to the console: 0 - 2 (1). |
 
 
 **2.2 Service parameters:**
@@ -45,11 +45,11 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 | --- | --- |
 | name | unique service name (required) |
 | fileExts | allowed file extensions, separated by commas (any, including the creation of subdirectories)|
-| debug | output to the console of debug information (off): on / off|
-| jobQuota | the maximum size of the job files (without restrictions) bytes|
-| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> ```%inFilesDir%  - full path to the job directory```<br>```%outFilesDir% - full path to the directory of result files```<br>```%jobParams%   - custom job parameters ``` |
+| debug | output to console service debug information: on / (off)|
+| jobQuota | the maximum size of the job files in bytes (without restrictions) |
+| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> %inFilesDir% - full path to the job directory<br>%outFilesDir% - full path to the directory of result files<br>%jobParams%  - custom job parameters |
 | jobDefaults | default job parameters (no)|
-| commandTimeout | the maximum execution time of the external job program (60) seconds.|
+| commandTimeout | the maximum execution time of the external job program in seconds (60).|
 
 Text of the 'service' node contains abstract.
 
@@ -66,7 +66,7 @@ The configuration files (linx/windows) contain examples of services that are bas
 | Office2ooxml | Convert office documents (ODF) to MS Office 2007 (OOXML) |
 | Office2mso97 | Convert office documents (ODF) to MS Office 97 |
 | Tesseract-OCR | Optical Text Recognition (OCR) |
-| Echo | Debug echo service. Returns the job file(s) by the mask defined by the parameter |
+| Echo | Debug echo service. Returns the job file(s) by the user-defined mask |
 	
 #### 3. Starting the server
 
@@ -81,11 +81,11 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
-To verify the health of the server type in the address bar of any web browser: http://\<host\>:\<port\>/restup
+You can check the server's availability and health by using any browser by typing in the address bar: http://\<host\>:\<port\>/restup
 
 #### 4. HTTP RESTful API
 
-API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with the server is performed using HTTP protocol in UTF-8 encoding. Returned success codes: 200, 201, 204.
+API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with server is done in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned.
 
@@ -158,7 +158,7 @@ Content-Length: 0
 ```
 **4.4 Execute the job, get the URI of the result files.**
 
-In the body of the request, you can specify a string of user-defined job parameters. Server waits for job completion, then delete job files and return uri of result files.
+In the body of the request, you can specify a string of user-defined service-depended job parameters. Server waits for job completion, then delete job files and return uri of result files.
 
 Client Request:
 ```HTTP
@@ -234,7 +234,7 @@ HTTP/1.1 204 No Content
 Content-Length: 0
 ```
 
-#### 5. User interface (experiment)
+#### 5. WebDAV user interface (experiment)
 
 The user interface is based on WebDAV class 1 protocol. The interface is a set of remote virtual folders. The action type for user job files is determined by the service assigned to the folder. Operating principle:
  - connect to the server (mount remote folder /restup/dav/);
@@ -242,7 +242,7 @@ The user interface is based on WebDAV class 1 protocol. The interface is a set o
  - copy the source files to the "%inFolderName%" subfolder;
  - return the result files from the subfolder "%outFolderName%".
 
-Information about the connected services and the limitations of the user session is found in the help file of the root folder of the server.
+Information about the connected services and the limitations of the user session is found in the help file of the root folder.
 
 **IMPORTANT:** in this version, the user is identified by an IP or host name or a combination of X-Forwarded-For + Via request header values.
 
@@ -284,10 +284,10 @@ Text of the 'folder' node contains abstract.
 
 **5.2 Connecting to the server**
 
-5.2.1 Mount remote folder from client console
+Mount remote folder from client console
 
 ```
-Windows (XP, Vista does not allow port 80 override): 
+Windows: 
   C:>net use <drive_letter:> \\<host>[:<port>]\restup\dav
 
 Ubuntu:
@@ -296,10 +296,11 @@ Ubuntu:
 openSUSE:
   $ sudo wdfs http://<host>[:<port>]/restup/dav <mount_point> -o umask=0770
 ```
-5.2.2 Connecting to the server from file managers
+
+Connecting to the server from file managers
 
 ```
-Windows Explorer (XP, Vista does not allow port 80 override):
+Windows Explorer:
   map network drive to '\\<host>[:<port>]\restup\dav'
   
 Ubuntu Gnome Nautilus:
@@ -308,7 +309,10 @@ Ubuntu Gnome Nautilus:
 openSUSE KDE Dolphin, Konqueror:
   in the address bar enter 'webdav://<host>[:<port>]/restup/dav'
 ```
-**NOTE:** File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
+**NOTES:**<br>
+1. Windows XP, Vista does not allow port 80 override;<br>
+2. Port 80 Windows 10 can be busy with the W3SVC (World Wide Web Publishing Service) service;<br> 
+3. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
 
