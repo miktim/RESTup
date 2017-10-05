@@ -47,7 +47,7 @@ Echo service. Returns the job file(s) by the mask defined by the job parameter.
 | fileExts | allowed file extensions, separated by commas (any, including the creation of subdirectories)|
 | debug | output to console service debug information: on / (off)|
 | jobQuota | the maximum size of the job files in bytes (without restrictions) |
-| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> %inFilesDir% - full path to the job directory<br>%outFilesDir% - full path to the directory of result files<br>%jobParams%  - custom job parameters |
+| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> %inFilesDir% - full path to the job directory;<br>%outFilesDir% - full path to the directory of result files;<br>%jobParams%  - custom job parameters. |
 | jobDefaults | default job parameters (no)|
 | commandTimeout | the maximum execution time of the external job program in seconds (60).|
 
@@ -55,7 +55,7 @@ Text of the 'service' node contains abstract.
 
 **2.3 PRE-Configured services (may vary)**
 
-The configuration files (linx/windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
+The configuration files (Linux/Windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
 - LibreOffice (4.2 for Windows .js): http://libreoffice.org/ ;
 - Tesseract-OCR: https://code.google.com/p/tesseract-ocr/ .
 
@@ -81,7 +81,8 @@ Default keys and values:
 | consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
 | davEnable | Enables / disables the WebDAV interface: yes/(no) |
 
-You can check the server's availability and health by using any browser by typing in the address bar: http://\<host\>:\<port\>/restup
+You can check the server's availability and health by using any WEB browser by typing in the address bar:<br>
+http://\<host\>:\<port\>/restup
 
 #### 4. HTTP RESTful API
 
