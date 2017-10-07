@@ -11,10 +11,10 @@ if [ ! -d ./classes/source ]
   then mkdir ./classes/source
   else rm -f ./classes/source/*.* 
 fi
-javac -Xstdout ./compile.log -Xlint:unchecked -cp ./ -d ./classes -encoding Cp1251  ${jname}.java 
+javac -Xstdout ./compile.log -Xlint:unchecked -cp ./ -d ./classes -encoding utf-8  ${jname}.java 
 if [ $? -eq 0 ] ; then
 #  cp ${jname}.java ./classes/source/
-  cp Help.txt ./classes/source/
+  cp ../Help-ru.txt ./classes/source/Help.txt
   cd ./classes
   jar cvfe ../../${jname}.jar ${jname} *.class  ./source/*.txt
   cd ..
