@@ -88,7 +88,7 @@ http://\<host\>:\<port\>/restup
 
 API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with server is done in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
-If the Host field is missing from the client request header, Error 400 (Bad Request) is returned. The URL of the request is validated against the top-level link ("dot-dot"). User-defined job parameter is checked for CR, LF and command continuation characters.
+If the Host field is missing from the client request header, Error 400 (Bad Request) is returned. The URL of the request is validated against the top-level link ("dot-dot"). 
 
 **4.1 Get a list of services**
 
@@ -159,7 +159,7 @@ Content-Length: 0
 ```
 **4.4 Execute the job, get the URI of the result files.**
 
-In the body of the request, you can specify a string of user-defined service-depended job parameters. Server waits for job completion, then delete job files and return uri of result files.
+In the body of the request, you can specify a string of user-defined service-depended job parameters. User-defined job parameter is checked for CR, LF and command continuation characters. Server waits for job completion, then delete job files and return uri of result files.
 
 Client Request:
 ```HTTP
@@ -255,7 +255,7 @@ Interface settings are stored in the corresponding section of the server configu
 <server ...>
 <service .../>
 ...
-<davInterface sessionTimeout=“240” sessionQuota=”100000” helpFileTemplate=”..\Source\Help-en.txt”>
+<davInterface sessionTimeout=“240” sessionQuota=”100000” helpFileTemplate=”..\Help-en.txt”>
 <folder uri=”/Test/Echo” serviceName=”Echo” jobParams=””>
 Debug echo service.
 </folder>
@@ -271,7 +271,7 @@ Debug echo service.
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Source/Help-en.txt](https://github.com/miktim/RESTup/blob/master/Source/Help-en.txt)|
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Help-en.txt](https://github.com/miktim/RESTup/blob/master/Source/Help-en.txt)|
 
 5.1.2 WebDAV Servce Folder Options:
 
