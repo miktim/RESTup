@@ -1,18 +1,16 @@
-// encoded Windows-1251 (ru)
 /**
- * RESTupServer RESTful сервер консольных приложений
- * Версия:	1.3.0
- * Автор:	miktim@mail.ru
- * Дата: 	2016.11.11
- * Изменения:
- * 2016.11.11 
- * 2015 дополнено DAV-интерфейсом, переработано под влиянием Joshua Bloch и Steven McConnel
- * 2014 java реализация под впечатлением http://habrahabr.ru/post/69136/ и James Gosling, Ken Arnold
- * 2013 идея, RESTful интерфейс
+ * RESTupServer RESTful СЃРµСЂРІРµСЂ РєРѕРЅСЃРѕР»СЊРЅС‹С… РїСЂРёР»РѕР¶РµРЅРёР№
+ * Р’РµСЂСЃРёСЏ:	1.3.0
+ * РђРІС‚РѕСЂ:	miktim@mail.ru
+ * Р”Р°С‚Р°: 	2016.11.11
+ * РР·РјРµРЅРµРЅРёСЏ:
+ * 2017.10.07 
+ * 2015 РґРѕРїРѕР»РЅРµРЅРѕ DAV-РёРЅС‚РµСЂС„РµР№СЃРѕРј
+ * 2014 java СЂРµР°Р»РёР·Р°С†РёСЏ
+ * 2013 РёРґРµСЏ RESTful РёРЅС‚РµСЂС„РµР№СЃР°
  *
- * Лицензионное соглашение:
  * (c) 2013-2016 miktim@mail
- * Использование изделия регулируется лицензией MIT 
+ * РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РёР·РґРµР»РёСЏ СЂРµРіСѓР»РёСЂСѓРµС‚СЃСЏ Р»РёС†РµРЅР·РёРµР№ MIT 
  */
 
 import java.net.ServerSocket;
@@ -34,10 +32,10 @@ import java.util.UUID;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.TimeZone;
-// парсинг регулярных выражений
+// РїР°СЂСЃРёРЅРі СЂРµРіСѓР»СЏСЂРЅС‹С… РІС‹СЂР°Р¶РµРЅРёР№
 import java.util.regex.Matcher; 
 import java.util.regex.Pattern; 
-// парсинг XML
+// РїР°СЂСЃРёРЅРі XML
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.TransformerFactory;
@@ -53,7 +51,7 @@ import org.w3c.dom.NodeList;
 public class RESTupServer {
     public static void main(String[] args) throws Throwable {
 	// http://www.javaportal.ru/java/articles/ruschars/ruschars.html#8bits
-	// кодировка консоли (-DconsoleEncoding=cp866 в строке запуска)
+	// РєРѕРґРёСЂРѕРІРєР° РєРѕРЅСЃРѕР»Рё (-DconsoleEncoding=cp866 РІ СЃС‚СЂРѕРєРµ Р·Р°РїСѓСЃРєР°)
 	String consoleEncoding = System.getProperty("consoleEncoding");
 	if (consoleEncoding != null) {
 	    try {
@@ -75,10 +73,10 @@ public class RESTupServer {
 	else new FServer().run();
     }
 //
-//**  HTTP/1.1 листенер
+//**  HTTP/1.1 Р»РёСЃС‚РµРЅРµСЂ
 //
 /**
- *  Http исключения. 
+ *  Http РёСЃРєР»СЋС‡РµРЅРёСЏ. 
  */
     public class HttpException extends Exception {
 	public int statusCode;
@@ -93,19 +91,19 @@ public class RESTupServer {
 	    	this.reasonPhrase = phrase.trim();
 	    }
 	}
-// код состояния и заголовки в response	
+// РєРѕРґ СЃРѕСЃС‚РѕСЏРЅРёСЏ Рё Р·Р°РіРѕР»РѕРІРєРё РІ response	
 	HttpException() {
 	}
     }
 /**
- *  Http сообщение  (request/response)
+ *  Http СЃРѕРѕР±С‰РµРЅРёРµ  (request/response)
  */
     protected abstract class HttpMessage {
 
-	private Properties headers = new Properties();  // заголовки
-	byte[] byteBody; 	// текстовое тело сообщения
-	String bodyCharsetName; // кодировка текста: "UTF-8"
-	File fileBody;		// ... или сохраненное в файл, извлекаемое из файла
+	private Properties headers = new Properties();  // Р·Р°РіРѕР»РѕРІРєРё
+	byte[] byteBody; 	// С‚РµРєСЃС‚РѕРІРѕРµ С‚РµР»Рѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+	String bodyCharsetName; // РєРѕРґРёСЂРѕРІРєР° С‚РµРєСЃС‚Р°: "UTF-8"
+	File fileBody;		// ... РёР»Рё СЃРѕС…СЂР°РЅРµРЅРЅРѕРµ РІ С„Р°Р№Р», РёР·РІР»РµРєР°РµРјРѕРµ РёР· С„Р°Р№Р»Р°
 //
 	public String headersList() {
 	    StringBuffer sb = new StringBuffer();
@@ -118,7 +116,7 @@ public class RESTupServer {
 	}
 //
 	public void setHeader(String headerName, String value) 
-	//??? несколько одноименных заголовков?
+	//??? РЅРµСЃРєРѕР»СЊРєРѕ РѕРґРЅРѕРёРјРµРЅРЅС‹С… Р·Р°РіРѕР»РѕРІРєРѕРІ?
 	    { headers.setProperty(headerName, value); }
 //
 	public String getHeader(String headerName)
@@ -151,7 +149,7 @@ public class RESTupServer {
 	}	
     }
 /**
- *  Http запрос
+ *  Http Р·Р°РїСЂРѕСЃ
  */
     public class HttpRequest extends HttpMessage {
 	private String line;	// request-line: 'METHOD request-uri HTTP/1.1'
@@ -218,7 +216,7 @@ public class RESTupServer {
 	    byte[] buf = new byte[512];
 	    int b;
 	    int i = 0;
-	// побайтовое чтение из потока до CR + LF
+	// РїРѕР±Р°Р№С‚РѕРІРѕРµ С‡С‚РµРЅРёРµ РёР· РїРѕС‚РѕРєР° РґРѕ CR + LF
 	    while ((b = is.read()) != -1 && b != CR ) buf[i++] = (byte)b;  
 	    if ((b = this.is.read()) != LF) throw new HttpException(400, "Bad Request");
 	    return new String(buf, 0, i); //US-ASCII	    
@@ -226,11 +224,11 @@ public class RESTupServer {
 //
 	private void readHeaders() throws IOException, HttpException {
 	    String sp[] = new String[2];
-	// чтение заголовков запроса до 'пустой' строки
+	// С‡С‚РµРЅРёРµ Р·Р°РіРѕР»РѕРІРєРѕРІ Р·Р°РїСЂРѕСЃР° РґРѕ 'РїСѓСЃС‚РѕР№' СЃС‚СЂРѕРєРё
  	    while(true) {
 		String s = this.readLine();
                 if(s == null || s.trim().length() == 0) break;
-	// строка-продолжение заголовка?
+	// СЃС‚СЂРѕРєР°-РїСЂРѕРґРѕР»Р¶РµРЅРёРµ Р·Р°РіРѕР»РѕРІРєР°?
 		if (s.startsWith(" ") || s.startsWith("\t")) sp[1].concat(" \r\n" + s.trim());
 		else sp = s.split(":", 2);
 		this.setHeader(sp[0].trim(), sp[1].trim());
@@ -238,7 +236,7 @@ public class RESTupServer {
 	}
     }
 /**
- *  Ответ на Http запрос
+ *  РћС‚РІРµС‚ РЅР° Http Р·Р°РїСЂРѕСЃ
  */
     public class HttpResponse extends HttpMessage {
 	private int statusCode = 204;
@@ -262,11 +260,11 @@ public class RESTupServer {
 	public String getReasonPhrase() { return reasonPhrase; }
 //
 	public void setContent(File file) throws FileNotFoundException, IOException {
-	// проверить файл на наличие и возможность чтения
+	// РїСЂРѕРІРµСЂРёС‚СЊ С„Р°Р№Р» РЅР° РЅР°Р»РёС‡РёРµ Рё РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ С‡С‚РµРЅРёСЏ
 	    FileReader fileReader = new FileReader(file);
 	    fileReader.read();
 	    fileReader.close();
-	    byteBody = null;   // сбросить текстовое тело
+	    byteBody = null;   // СЃР±СЂРѕСЃРёС‚СЊ С‚РµРєСЃС‚РѕРІРѕРµ С‚РµР»Рѕ
 	    fileBody = file;
 	}
 //
@@ -282,11 +280,11 @@ public class RESTupServer {
 	}
 //
 	public void send() throws IOException {
-	// предотвращение повторной отправки
+	// РїСЂРµРґРѕС‚РІСЂР°С‰РµРЅРёРµ РїРѕРІС‚РѕСЂРЅРѕР№ РѕС‚РїСЂР°РІРєРё
 	    if (this.alreadySent) return;
-	// пометка: ответ отправлен
+	// РїРѕРјРµС‚РєР°: РѕС‚РІРµС‚ РѕС‚РїСЂР°РІР»РµРЅ
 	    this.alreadySent = true;
-	// определение размера тела ответа   
+	// РѕРїСЂРµРґРµР»РµРЅРёРµ СЂР°Р·РјРµСЂР° С‚РµР»Р° РѕС‚РІРµС‚Р°   
 	    long bodyLength = 0L;
 	    if (this.byteBody == null) this.byteBody = new byte[0];
 	    if (this.fileBody != null) {
@@ -295,13 +293,13 @@ public class RESTupServer {
 		bodyLength = this.byteBody.length;
 	    }
 	    this.setHeader("Content-Length", Long.toString(bodyLength,10));
-	// отправка строки состояния и заголовков (US-ASCII)
+	// РѕС‚РїСЂР°РІРєР° СЃС‚СЂРѕРєРё СЃРѕСЃС‚РѕСЏРЅРёСЏ Рё Р·Р°РіРѕР»РѕРІРєРѕРІ (US-ASCII)
 	    os.write(("HTTP/1.1 " + statusCode + " " + reasonPhrase + "\r\n"
 		+ this.headersList() + "\r\n").getBytes());
-	// отправка тела, если код состояния не 204 (No Content)
+	// РѕС‚РїСЂР°РІРєР° С‚РµР»Р°, РµСЃР»Рё РєРѕРґ СЃРѕСЃС‚РѕСЏРЅРёСЏ РЅРµ 204 (No Content)
 	    if (this.statusCode != 204 && bodyLength > 0L) {
 	    	if (this.fileBody != null) {
-	// ...файл   
+	// ...С„Р°Р№Р»   
 		    FileInputStream fis = new FileInputStream(this.fileBody);
 		    try {
 		    	streamToStream(fis, this.os, bodyLength);
@@ -311,7 +309,7 @@ public class RESTupServer {
 		    	throw ie;
 		    }
 	    	} else {
-	// ...текст
+	// ...С‚РµРєСЃС‚
 		    os.write(this.byteBody);
 		}
 	    }
@@ -346,7 +344,7 @@ public class RESTupServer {
     }
 
 /**
-*  Процесс - обработчик http-запроса
+*  РџСЂРѕС†РµСЃСЃ - РѕР±СЂР°Р±РѕС‚С‡РёРє http-Р·Р°РїСЂРѕСЃР°
 */
     class HttpProcessor implements Runnable {
         private HttpListener listener;
@@ -375,12 +373,12 @@ public class RESTupServer {
                 } catch (HttpException ht) {
 		    if (ht.statusCode > 0) {
 			response.setStatus(ht.statusCode, ht.reasonPhrase);
-			response.setContent(new byte[0]);	// сбросить тело сообщения
+			response.setContent(new byte[0]);	// СЃР±СЂРѕСЃРёС‚СЊ С‚РµР»Рѕ СЃРѕРѕР±С‰РµРЅРёСЏ
 		    }
 		} catch (Throwable th) {
 		    debugLevel = 2;
 		    response.setStatus(500, "Internal Server Error");
-		    response.setContent(new byte[0]);		// сбросить тело сообщения
+		    response.setContent(new byte[0]);		// СЃР±СЂРѕСЃРёС‚СЊ С‚РµР»Рѕ СЃРѕРѕР±С‰РµРЅРёСЏ
 		    th.printStackTrace(new PrintStream(debugStream, true));
 	        } finally {
 		    response.setHeader("Connection","Close");
@@ -441,7 +439,7 @@ public class RESTupServer {
  	}
 
 /**
- *  Http листенер. 
+ *  Http Р»РёСЃС‚РµРЅРµСЂ. 
  */
     public class HttpListener {
 //
@@ -496,11 +494,11 @@ public class RESTupServer {
 // */ HttpListener
 
 /**
- *  RESTful Сервер консольных приложений
+ *  RESTful РЎРµСЂРІРµСЂ РєРѕРЅСЃРѕР»СЊРЅС‹С… РїСЂРёР»РѕР¶РµРЅРёР№
  */
     public static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";  
 
-//  !!! uri без протокола, хоста и порта (http://host:port/uri)
+//  !!! uri Р±РµР· РїСЂРѕС‚РѕРєРѕР»Р°, С…РѕСЃС‚Р° Рё РїРѕСЂС‚Р° (http://host:port/uri)
 //  !!! UTF-8
     public static String URIEncode(String uri) throws Throwable {
 	String uriSeg[] = uri.split("/");
@@ -585,7 +583,7 @@ public class RESTupServer {
 	public static final String SERVER_VERSION = "RESTup/1.3.0.61100";
 	public static final String SERVER_ROOT = "/restup";
 /**
- *  Расширение класса листенера методом обслуживания http-запросов сервера
+ *  Р Р°СЃС€РёСЂРµРЅРёРµ РєР»Р°СЃСЃР° Р»РёСЃС‚РµРЅРµСЂР° РјРµС‚РѕРґРѕРј РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ http-Р·Р°РїСЂРѕСЃРѕРІ СЃРµСЂРІРµСЂР°
  */
 	class Listener extends HttpListener {
 	    private FServer fServer;
@@ -608,7 +606,7 @@ public class RESTupServer {
 	    return this.listener.currentHttpInvocation().dbg;
 	}
 /**
- *      Чистильщик просроченных и 'забытых' заданий 
+ *      Р§РёСЃС‚РёР»СЊС‰РёРє РїСЂРѕСЃСЂРѕС‡РµРЅРЅС‹С… Рё 'Р·Р°Р±С‹С‚С‹С…' Р·Р°РґР°РЅРёР№ 
  */
     	class Trash implements Runnable {
 	    FServer server;
@@ -633,61 +631,61 @@ public class RESTupServer {
 	    }
 	}
 //
-	File spoolDir;          // папка файлов заданий
-	int port = 80;		// порт листенера
-	int debugLevel = 1;	// 0-2 объем отладочных данных на консоли
-//	boolean davEnable = false;// разрешить/запретить WebDAV интерфейс
-	int jobsLifeTime = 240;	// время жизни заданий (сек)
-	int maxJobsStarted = 2;	// максимальное количество запущенных внешних приложений
-	int jobsStarted;	// запущено внешних приложений
-	Vector<FService> services = new Vector<FService>(); // список сервисов
+	File spoolDir;          // РїР°РїРєР° С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёР№
+	int port = 80;		// РїРѕСЂС‚ Р»РёСЃС‚РµРЅРµСЂР°
+	int debugLevel = 1;	// 0-2 РѕР±СЉРµРј РѕС‚Р»Р°РґРѕС‡РЅС‹С… РґР°РЅРЅС‹С… РЅР° РєРѕРЅСЃРѕР»Рё
+//	boolean davEnable = false;// СЂР°Р·СЂРµС€РёС‚СЊ/Р·Р°РїСЂРµС‚РёС‚СЊ WebDAV РёРЅС‚РµСЂС„РµР№СЃ
+	int jobsLifeTime = 240;	// РІСЂРµРјСЏ Р¶РёР·РЅРё Р·Р°РґР°РЅРёР№ (СЃРµРє)
+	int maxJobsStarted = 2;	// РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїСѓС‰РµРЅРЅС‹С… РІРЅРµС€РЅРёС… РїСЂРёР»РѕР¶РµРЅРёР№
+	int jobsStarted;	// Р·Р°РїСѓС‰РµРЅРѕ РІРЅРµС€РЅРёС… РїСЂРёР»РѕР¶РµРЅРёР№
+	Vector<FService> services = new Vector<FService>(); // СЃРїРёСЃРѕРє СЃРµСЂРІРёСЃРѕРІ
 //
 //  FServer.run 
 //
 	public void run() throws IOException {
-	// стартуем процесс-чистильщик просроченных заданий
+	// СЃС‚Р°СЂС‚СѓРµРј РїСЂРѕС†РµСЃСЃ-С‡РёСЃС‚РёР»СЊС‰РёРє РїСЂРѕСЃСЂРѕС‡РµРЅРЅС‹С… Р·Р°РґР°РЅРёР№
             new Thread(new Trash(this)).start();
 	    listener = new Listener(this);
-	// для листенера вызываем метод (бесконечный цикл)	
+	// РґР»СЏ Р»РёСЃС‚РµРЅРµСЂР° РІС‹Р·С‹РІР°РµРј РјРµС‚РѕРґ (Р±РµСЃРєРѕРЅРµС‡РЅС‹Р№ С†РёРєР»)	
 	    listener.start();
         }
 //
-//  метод вызывается из листенера, формируeт HttpResponse 
+//  РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· Р»РёСЃС‚РµРЅРµСЂР°, С„РѕСЂРјРёСЂСѓeС‚ HttpResponse 
 //
-	// технические заголовки - элементы request-line	
+	// С‚РµС…РЅРёС‡РµСЃРєРёРµ Р·Р°РіРѕР»РѕРІРєРё - СЌР»РµРјРµРЅС‚С‹ request-line	
 	public static final String REQUESTED_SERVICE = "x-restup-service";
 	public static final String REQUESTED_JOB = "x-restup-job";
 	public static final String REQUESTED_FILE = "x-restup-file";
 
         public void processRequest(HttpRequest rq, HttpResponse rs) throws Throwable {
-	// проверка пары Method/Path из Request-Line Http-запроса,
-	// определение действия и параметров по таблице
+	// РїСЂРѕРІРµСЂРєР° РїР°СЂС‹ Method/Path РёР· Request-Line Http-Р·Р°РїСЂРѕСЃР°,
+	// РѕРїСЂРµРґРµР»РµРЅРёРµ РґРµР№СЃС‚РІРёСЏ Рё РїР°СЂР°РјРµС‚СЂРѕРІ РїРѕ С‚Р°Р±Р»РёС†Рµ
 	    String rqLine = rq.getRequestLine().replace("//","/"); // WinXP Dav MiniRedir
 	    for (int i=0; i < serverActions.length; i++) { 
 		Matcher matcher = serverActions[i].pattern.matcher(rqLine);
 		if (matcher.matches()) {
 		    FAction a = serverActions[i];
-	// создание в Request технических заголовков-элементов строки запроса
+	// СЃРѕР·РґР°РЅРёРµ РІ Request С‚РµС…РЅРёС‡РµСЃРєРёС… Р·Р°РіРѕР»РѕРІРєРѕРІ-СЌР»РµРјРµРЅС‚РѕРІ СЃС‚СЂРѕРєРё Р·Р°РїСЂРѕСЃР°
 		    String[] pathParms = { "", REQUESTED_SERVICE, REQUESTED_JOB, REQUESTED_FILE };
 		    for (int g=1; g <= matcher.groupCount(); g++) {
 			rq.setHeader(pathParms[g], URIDecode(matcher.group(g)));
 		    }
-	// выполнить запрос клиента, сформировать Response листенеру
+	// РІС‹РїРѕР»РЅРёС‚СЊ Р·Р°РїСЂРѕСЃ РєР»РёРµРЅС‚Р°, СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ Response Р»РёСЃС‚РµРЅРµСЂСѓ
 		    a.action.execute(rq, rs, this);
 		    return;
 		}
 	    }
-	// не найдено соответствие Method/Path
+	// РЅРµ РЅР°Р№РґРµРЅРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ Method/Path
 	    throw new HttpException(404,"Not Found");
         }
 //
-// Таблица методов, URI и действий сервера
+// РўР°Р±Р»РёС†Р° РјРµС‚РѕРґРѕРІ, URI Рё РґРµР№СЃС‚РІРёР№ СЃРµСЂРІРµСЂР°
 //
 	FAction[] serverActions = {
 //
-//  REST интерфейс
+//  REST РёРЅС‚РµСЂС„РµР№СЃ
 //
-	// получить файл результата или список файлов
+	// РїРѕР»СѓС‡РёС‚СЊ С„Р°Р№Р» СЂРµР·СѓР»СЊС‚Р°С‚Р° РёР»Рё СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ
 	    new FAction("GET " + SERVER_ROOT + "/([^/]+)/([^/]+)/out/([^ ]*) [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    FJob job = fs.getService(rq.getHeader(REQUESTED_SERVICE))
@@ -696,7 +694,7 @@ public class RESTupServer {
 		    String rqUri = rq.getHeader(REQUESTED_FILE);
 		    checkFilePath(rqUri);
 		    File jobFile = job.getResFile(rqUri.replace("/",File.separator));
-	// если папка - вернуть список файлов-результатов исполнения задания
+	// РµСЃР»Рё РїР°РїРєР° - РІРµСЂРЅСѓС‚СЊ СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ-СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РёСЃРїРѕР»РЅРµРЅРёСЏ Р·Р°РґР°РЅРёСЏ
 		    if ( jobFile.isDirectory() ) {
 		    	String fileUri = job.URI(rq.getHost()) + "/out" + URIEncode(rqUri) + "/";
 		    	rs.setHeader("Content-Location", fileUri);
@@ -704,13 +702,13 @@ public class RESTupServer {
 			rs.setContent(job.dirToXML(jobFile), "utf-8");
 		    }
 		    else {
-	// получить файл результата
+	// РїРѕР»СѓС‡РёС‚СЊ С„Р°Р№Р» СЂРµР·СѓР»СЊС‚Р°С‚Р°
 		        rs.setContent(jobFile);
 	                rs.setHeader("Content-Type","application/octet-stream");
 		    };
 		    rs.setStatus(200, "OK"); 
 	     } })
-	// передать файл задания
+	// РїРµСЂРµРґР°С‚СЊ С„Р°Р№Р» Р·Р°РґР°РЅРёСЏ
 	    ,new FAction("PUT " + SERVER_ROOT + "/([^/]+)/([^/]+)/in/([^ ]+) [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    String fileName = rq.getHeader(REQUESTED_FILE);
@@ -719,7 +717,7 @@ public class RESTupServer {
 			.getJob(rq.getHeader(REQUESTED_JOB))
 			.putJobFile(rq, fileName.replace("/",File.separator));
 	    } })
-	// стартовать задание, ждать завершения, вернуть URI файлов результата
+	// СЃС‚Р°СЂС‚РѕРІР°С‚СЊ Р·Р°РґР°РЅРёРµ, Р¶РґР°С‚СЊ Р·Р°РІРµСЂС€РµРЅРёСЏ, РІРµСЂРЅСѓС‚СЊ URI С„Р°Р№Р»РѕРІ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 	    ,new FAction("POST " + SERVER_ROOT + "/([^/]+)/([^/ ]+)(?:/in|)[/]? [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    FJob job = fs.getService(rq.getHeader(REQUESTED_SERVICE))
@@ -729,20 +727,20 @@ public class RESTupServer {
 		    rs.setHeader("Location", job.URI(rq.getHost())+"/out/");
 		    rs.setStatus(201, "Created");
 	     } })
-	// удалить задание и файлы-результаты
+	// СѓРґР°Р»РёС‚СЊ Р·Р°РґР°РЅРёРµ Рё С„Р°Р№Р»С‹-СЂРµР·СѓР»СЊС‚Р°С‚С‹
 	    ,new FAction("DELETE " + SERVER_ROOT + "/([^/]+)/([^/ ]+)(?:/in|/out|)[/]? [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    fs.getService(rq.getHeader(REQUESTED_SERVICE))
 			.deleteJob(rq.getHeader(REQUESTED_JOB));
 	      } })
-	// создать задание сервису, вернуть URI файлов задания
+	// СЃРѕР·РґР°С‚СЊ Р·Р°РґР°РЅРёРµ СЃРµСЂРІРёСЃСѓ, РІРµСЂРЅСѓС‚СЊ URI С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёСЏ
 	    ,new FAction("POST " + SERVER_ROOT + "/([^/ ]+)[/]? [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    rs.setStatus(201, "Created");
 		    rs.setHeader("Location"
 			, fs.getService(rq.getHeader(REQUESTED_SERVICE)).createJob().URI(rq.getHost())+"/in/");
 	        } })
-	// получить список сервисов
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЃРµСЂРІРёСЃРѕРІ
 	    ,new FAction("GET " + SERVER_ROOT + "[/]? [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    rs.setContent(fs.servicesToXML(rq.getHost()), "utf-8");
@@ -750,7 +748,7 @@ public class RESTupServer {
 //		    rs.setHeader("Content-Location", fs.URL(rq.getHost()));
 		    rs.setStatus(200, "OK");
 		 } })
-	// необслуживаемый запрос
+	// РЅРµРѕР±СЃР»СѓР¶РёРІР°РµРјС‹Р№ Р·Р°РїСЂРѕСЃ
 	    ,new FAction("[^ ]+ [^ ]+ [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
  		    throw new HttpException(404, "Not Found");
@@ -761,14 +759,14 @@ public class RESTupServer {
 //
 	FServer() throws Throwable {
 	    String spoolDirName = "restup_spool";
-	// определить папку %temp% по переменным окружения
+	// РѕРїСЂРµРґРµР»РёС‚СЊ РїР°РїРєСѓ %temp% РїРѕ РїРµСЂРµРјРµРЅРЅС‹Рј РѕРєСЂСѓР¶РµРЅРёСЏ
 	    if (System.getenv("TEMP") != null) {
 	    	this.spoolDir = new File(System.getenv("TEMP"));  // Windows
 	    } else {
-	// определить папку %temp% по временному файлу
+	// РѕРїСЂРµРґРµР»РёС‚СЊ РїР°РїРєСѓ %temp% РїРѕ РІСЂРµРјРµРЅРЅРѕРјСѓ С„Р°Р№Р»Сѓ
 	    	File tmpFile = File.createTempFile(spoolDirName,null);
 		this.spoolDir = tmpFile.getParentFile();
-	    	tmpFile.delete();	// удалить временный файл
+	    	tmpFile.delete();	// СѓРґР°Р»РёС‚СЊ РІСЂРµРјРµРЅРЅС‹Р№ С„Р°Р№Р»
 	    }
 	    this.spoolDir = new File(this.spoolDir, File.separator + spoolDirName + File.separator);
 	// http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
@@ -826,15 +824,15 @@ public class RESTupServer {
 	};
 //
 	protected void parseCfg(Element eRoot) throws Throwable {
-	// параметры сервера из config.xml
+	// РїР°СЂР°РјРµС‚СЂС‹ СЃРµСЂРІРµСЂР° РёР· config.xml
 	    this.port = (int)getAttr(eRoot,"port",this.port);
 	    this.spoolDir = getAttr(eRoot,"spoolDir",this.spoolDir);
-	// очистить папку файлов заданий и результатов
+	// РѕС‡РёСЃС‚РёС‚СЊ РїР°РїРєСѓ С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёР№ Рё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 	    rmTree(this.spoolDir);
 	    this.maxJobsStarted = (int)getAttr(eRoot,"maxJobsStarted",this.maxJobsStarted);
 	    this.jobsLifeTime = (int)getAttr(eRoot,"jobsLifeTime",this.jobsLifeTime);
 	    this.debugLevel = (int)getAttr(eRoot, "debugLevel", this.debugLevel);
-	// параметры сервисов из config.xml
+	// РїР°СЂР°РјРµС‚СЂС‹ СЃРµСЂРІРёСЃРѕРІ РёР· config.xml
 	    System.out.println("Services:");      
 	    NodeList nList = eRoot.getElementsByTagName("service");
 	    FService fService = null;
@@ -861,7 +859,7 @@ public class RESTupServer {
 		}
 	    }
 	}
-// Добавить сервис, если не существует
+// Р”РѕР±Р°РІРёС‚СЊ СЃРµСЂРІРёСЃ, РµСЃР»Рё РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 	private void addService(FService service) {
 	    if (service.name == null || service.name.length() == 0
 		|| (service.jobCommand == null || service.jobCommand.length() == 0))
@@ -886,7 +884,7 @@ public class RESTupServer {
 		FJob[] ja = new FJob[sa[i].jobs.size()];
 		sa[i].jobs.copyInto(ja);
 		for (int j=0; j < ja.length; j++) {
-	// не удалять задания в процессе исполнения
+	// РЅРµ СѓРґР°Р»СЏС‚СЊ Р·Р°РґР°РЅРёСЏ РІ РїСЂРѕС†РµСЃСЃРµ РёСЃРїРѕР»РЅРµРЅРёСЏ
 		    if (ja[j].created < killTime && ja[j].process == null) {
 			ja[j].service.deleteJob(ja[j]);
 			jobs++;
@@ -950,21 +948,21 @@ public class RESTupServer {
 	} 
     }  // FServer
 /**
-  Сервис
+  РЎРµСЂРІРёСЃ
 */
     private class FService {
 	String id;                  // name.toLowerCase()
-	String name;   		    // уникальное имя
-	FServer server;		    // ссылка вверх
-        String fileExts;            // допустимые расширения файлов
-	Boolean debug = false;	    // вывод отладки
-	String jobCommand;          // внешняя команда
-	String jobDefaults;         // параметр задания по-умолчанию
-	int jobProcessTimeOut = 60; // таймаут внешнего процесса (сек)
+	String name;   		    // СѓРЅРёРєР°Р»СЊРЅРѕРµ РёРјСЏ
+	FServer server;		    // СЃСЃС‹Р»РєР° РІРІРµСЂС…
+        String fileExts;            // РґРѕРїСѓСЃС‚РёРјС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»РѕРІ
+	Boolean debug = false;	    // РІС‹РІРѕРґ РѕС‚Р»Р°РґРєРё
+	String jobCommand;          // РІРЅРµС€РЅСЏСЏ РєРѕРјР°РЅРґР°
+	String jobDefaults;         // РїР°СЂР°РјРµС‚СЂ Р·Р°РґР°РЅРёСЏ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ
+	int jobProcessTimeOut = 60; // С‚Р°Р№РјР°СѓС‚ РІРЅРµС€РЅРµРіРѕ РїСЂРѕС†РµСЃСЃР° (СЃРµРє)
         boolean isStopped;
-	long jobQuota = Long.MAX_VALUE; // размер файлов задания
-	String comment = "";        // аннотация
-	private Vector<FJob> jobs = new Vector<FJob>();  // список заданий
+	long jobQuota = Long.MAX_VALUE; // СЂР°Р·РјРµСЂ С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёСЏ
+	String comment = "";        // Р°РЅРЅРѕС‚Р°С†РёСЏ
+	private Vector<FJob> jobs = new Vector<FJob>();  // СЃРїРёСЃРѕРє Р·Р°РґР°РЅРёР№
 //
 	FService(String name) throws Exception {
 	    if (name == null || name.trim().length() == 0) name = "noName";
@@ -1029,18 +1027,18 @@ public class RESTupServer {
 	}
     }
 /**
-  Задание
+  Р—Р°РґР°РЅРёРµ
 */
     private class FJob {
 	String id;
-	FService service;	// ссылка вверх
-	long size;		// текущий размер файлов задания
-	long created = System.currentTimeMillis(); // время создания задания
-//	long enqueued = 0;	// ...постановки в очередь
-	long started = 0;	// ...старта внешней программы
-	long ended = 0;		// ...завершения внешней программы
-	int exitVal = 0;	// код завершения внешней программы
-	Process process;	// процесс внешней программы
+	FService service;	// СЃСЃС‹Р»РєР° РІРІРµСЂС…
+	long size;		// С‚РµРєСѓС‰РёР№ СЂР°Р·РјРµСЂ С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёСЏ
+	long created = System.currentTimeMillis(); // РІСЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ Р·Р°РґР°РЅРёСЏ
+//	long enqueued = 0;	// ...РїРѕСЃС‚Р°РЅРѕРІРєРё РІ РѕС‡РµСЂРµРґСЊ
+	long started = 0;	// ...СЃС‚Р°СЂС‚Р° РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
+	long ended = 0;		// ...Р·Р°РІРµСЂС€РµРЅРёСЏ РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
+	int exitVal = 0;	// РєРѕРґ Р·Р°РІРµСЂС€РµРЅРёСЏ РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
+	Process process;	// РїСЂРѕС†РµСЃСЃ РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
 //
 	FJob() {
 	    this.id = Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
@@ -1083,38 +1081,39 @@ public class RESTupServer {
 	}
 //
 	public void putJobFile(HttpRequest rq, String path) throws HttpException, IOException {
-	// задание уже завершено ? - ошибка !
+	// Р·Р°РґР°РЅРёРµ СѓР¶Рµ Р·Р°РІРµСЂС€РµРЅРѕ ? - РѕС€РёР±РєР° !
 	    if (this.ended != 0)
 		throw new HttpException(409,"Conflict");
-	// превышение размеров задания ?
+	// РїСЂРµРІС‹С€РµРЅРёРµ СЂР°Р·РјРµСЂРѕРІ Р·Р°РґР°РЅРёСЏ ?
 	    long fileSize = rq.getContentLength();  
 	    if ( (this.size + fileSize) > this.service.jobQuota) 
 		throw new HttpException(413, "Payload Too Large"); //RFC7213
-	// допустимое расширение файла ? 
+	// РґРѕРїСѓСЃС‚РёРјРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° ? 
 	    if (! this.service.fileExtAllowed( path )) 
 		throw new HttpException(415, "Unsupported Media Type");
 	    File f = new File(this.jobFilesDir(), path);
-	// создать рабочий каталог, если еще не создан
+	// СЃРѕР·РґР°С‚СЊ СЂР°Р±РѕС‡РёР№ РєР°С‚Р°Р»РѕРі, РµСЃР»Рё РµС‰Рµ РЅРµ СЃРѕР·РґР°РЅ
 	    f.getParentFile().mkdirs();
 	    rq.writeContent(f);
 	    this.size += fileSize;
 	}
 //
 	public File getResFile(String path) throws Throwable {
-	// задание не завершено? - ошибка !
+	// Р·Р°РґР°РЅРёРµ РЅРµ Р·Р°РІРµСЂС€РµРЅРѕ? - РѕС€РёР±РєР° !
 	    if (this.ended == 0) throw new HttpException(409,"Conflict");
 	    File f = new File(this.resFilesDir(), path);
-	// файл существует?
+	// С„Р°Р№Р» СЃСѓС‰РµСЃС‚РІСѓРµС‚?
 	    if (!f.exists()) throw new HttpException(404,"Not Found");
 	    return f;
 	}
-// Получить параметры задания из тела запроса
+// РџРѕР»СѓС‡РёС‚СЊ РїР°СЂР°РјРµС‚СЂС‹ Р·Р°РґР°РЅРёСЏ РёР· С‚РµР»Р° Р·Р°РїСЂРѕСЃР°
 	public String getJobParms(HttpRequest rq) throws HttpException {
             try {
                 String parms = rq.getContent("utf-8");
 		if (parms.indexOf("||") != -1 
 		    || parms.indexOf("&") != -1
 		    || parms.indexOf(";") != -1
+                    || parms.indexOf("\r") != -1
 		    || parms.indexOf("\n") != -1
                     || parms.indexOf("..") != -1
 		    ) throw new HttpException(400, "Bad Request");
@@ -1122,7 +1121,7 @@ public class RESTupServer {
 	    } catch (IOException ie) {};
 	    return null;	 
 	}
-// Проверка кода возврата внешней программы
+// РџСЂРѕРІРµСЂРєР° РєРѕРґР° РІРѕР·РІСЂР°С‚Р° РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
         public void checkExitVal() throws Throwable {
 	    if (this.started == 0) throw new HttpException(409,"Conflict");	// Job Not Started  
 	    if (this.ended == 0) throw new HttpException(409,"Conflict");	// Job Not Ended
@@ -1130,20 +1129,20 @@ public class RESTupServer {
 	    if (this.exitVal == -1) throw new HttpException(503,"Service Unavailable");   // Service Timeout
 	    if (this.exitVal > 0 ) throw new HttpException(500,"Internal Server Error");  // Service Failed
         }
-// Запустить задание, ждать завершения
+// Р—Р°РїСѓСЃС‚РёС‚СЊ Р·Р°РґР°РЅРёРµ, Р¶РґР°С‚СЊ Р·Р°РІРµСЂС€РµРЅРёСЏ
 	public void run(String params) throws Throwable {
 	    this.run(this.jobFilesDir(), this.resFilesDir(), params);
 	}
 	public synchronized void run(File jobFiles, File resFiles, String params) throws Throwable {
-	// задание завершено? 
+	// Р·Р°РґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ? 
 	    if (this.ended != 0) checkExitVal();
-	// задание уже запущено? - ошибка
+	// Р·Р°РґР°РЅРёРµ СѓР¶Рµ Р·Р°РїСѓС‰РµРЅРѕ? - РѕС€РёР±РєР°
 	    if (this.started != 0) 
 		throw new HttpException(409,"Conflict"); // already running
 	    if (this.size == 0 && this.service.jobQuota > 0)
 		return; //nothing to do
 //		throw new HttpException(409,"Conflict"); //nothing to do
-	// формирование строки команды
+	// С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РєРѕРјР°РЅРґС‹
 	    String command = this.service.jobCommand
 //		.replace("%inFilesDir%", jobFiles.getCanonicalPath() + File.separator)
 //		.replace("%outFilesDir%", resFiles.getCanonicalPath() + File.separator)
@@ -1162,16 +1161,16 @@ public class RESTupServer {
 	    Throwable th = null;
 	    try {
 		this.exitVal = -2;
-	    // создать каталог для файлов-результатов
+	    // СЃРѕР·РґР°С‚СЊ РєР°С‚Р°Р»РѕРі РґР»СЏ С„Р°Р№Р»РѕРІ-СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
 	        if (!resFiles.exists()) resFiles.mkdirs();
-	    // запуск задания (внешней программы)
+	    // Р·Р°РїСѓСЃРє Р·Р°РґР°РЅРёСЏ (РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹)
                 this.process = Runtime.getRuntime().exec(command);
-	    // ожидание завершения внешней программы
+	    // РѕР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹
 		this.exitVal = this.wait(this.service.jobProcessTimeOut);
 	    } catch (Throwable thr) {
 		th = thr;
 	    };
-	// уменьшим счетчик запущенных заданий
+	// СѓРјРµРЅСЊС€РёРј СЃС‡РµС‚С‡РёРє Р·Р°РїСѓС‰РµРЅРЅС‹С… Р·Р°РґР°РЅРёР№
 	    this.service.server.jobEnded();
 //http://stackoverflow.com/questions/14542448/capture-the-output-of-an-external-program-in-java
 	    BufferedReader bri = new BufferedReader(new InputStreamReader(this.process.getErrorStream()));
@@ -1186,13 +1185,13 @@ public class RESTupServer {
 		    while ((line = bri.readLine()) != null) dbg.println(line);
 		}
 	    }
-	// удалить исходные файл(ы) задания 
+	// СѓРґР°Р»РёС‚СЊ РёСЃС…РѕРґРЅС‹Рµ С„Р°Р№Р»(С‹) Р·Р°РґР°РЅРёСЏ 
 	    rmTree(this.jobFilesDir());
 	    checkExitVal();
 	}
-// Ожидание завершения внешней программы 
+// РћР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РІРЅРµС€РЅРµР№ РїСЂРѕРіСЂР°РјРјС‹ 
 	private int wait(int timeOut) {
-	    long timeQuant = timeOut*10;  // 1/100 от timeOut
+	    long timeQuant = timeOut*10;  // 1/100 РѕС‚ timeOut
 	    long killTime = System.currentTimeMillis()+(timeOut*1000);
 	    if (this.process == null) return -2;
 	    do {
@@ -1206,7 +1205,7 @@ public class RESTupServer {
 		} catch (IllegalThreadStateException is) {
 		}
 	    } while (System.currentTimeMillis() < killTime);
-       // превышено время ожидания - убиваем процесс
+       // РїСЂРµРІС‹С€РµРЅРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ - СѓР±РёРІР°РµРј РїСЂРѕС†РµСЃСЃ
     	    this.process.destroy();
 	    try { 
 		this.process.waitFor();
@@ -1217,7 +1216,7 @@ public class RESTupServer {
     }
 // */DServer
 /*
- * WEBdav интерфейс
+ * WEBdav РёРЅС‚РµСЂС„РµР№СЃ
  */
 //  http://stackoverflow.com/questions/80476/how-to-concatenate-two-arrays-in-java
     public static<T> T[] concatenateArrays(T[] a, T[] b) {
@@ -1267,7 +1266,7 @@ public class RESTupServer {
 	fs.close();
     }
 /**
- * WebDAV сервер
+ * WebDAV СЃРµСЂРІРµСЂ
  */
     class DServer extends FServer {
 	public static final String REQUESTED_DAVFILE = REQUESTED_SERVICE;
@@ -1276,16 +1275,16 @@ public class RESTupServer {
 	public static final String DAV_DESCRIPTOR_NAME = ".service";
 	public static final String DAV_ABSTRACT_NAME = ".abstract";
 	
-        long sessionQuota;	//=bytes !!!инициализация в parseDavCfg()
+        long sessionQuota;	//=bytes !!!РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІ parseDavCfg()
         long sessionTimeout;	//=secs
 	private String resFolderName;// ="Results"
 	private String jobFolderName;// ="JobFiles"
 
-	Vector<DSession> sessions = new Vector<DSession>(); //сессии пользователей
+	Vector<DSession> sessions = new Vector<DSession>(); //СЃРµСЃСЃРёРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 // 	
 	DServer() throws Throwable {
 	    super();
-	// активировать dav интерфейс
+	// Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ dav РёРЅС‚РµСЂС„РµР№СЃ
             serverActions = concatenateArrays(interfaceActions, serverActions);
 	    interfaceActions = null;
 	}
@@ -1363,10 +1362,10 @@ public class RESTupServer {
 	boolean isResFolder(File f) {
 	    return (isServiceFolder(f.getParentFile()) && f.getName().equals(this.resFolderName));
 	}
-//  Создание схемы папок интерфейса по файлу конфигурации
+//  РЎРѕР·РґР°РЅРёРµ СЃС…РµРјС‹ РїР°РїРѕРє РёРЅС‚РµСЂС„РµР№СЃР° РїРѕ С„Р°Р№Р»Сѓ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
         void parseDavCfg(Element eRoot) { 
 	    File dsDir = schemaDir();
-	// параметры dav сессии/интерфейса
+	// РїР°СЂР°РјРµС‚СЂС‹ dav СЃРµСЃСЃРёРё/РёРЅС‚РµСЂС„РµР№СЃР°
 	    NodeList nList = eRoot.getElementsByTagName("davInterface");
 	    if (nList.getLength() == 0) return;
 //	    if (nList.getLength() > 1 ) throw new Exception("Too many davInterface sections");
@@ -1375,7 +1374,7 @@ public class RESTupServer {
 	    this.sessionQuota = (long)getAttr(dRoot,"sessionQuota",2147483648L);  // 2GiB
 	    this.jobFolderName = getAttr(dRoot,"inFolderName","in");
 	    this.resFolderName = getAttr(dRoot,"outFolderName","out");
- 	// dav схема из config.xml      
+ 	// dav СЃС…РµРјР° РёР· config.xml      
 	    nList = dRoot.getElementsByTagName("folder");
 	    String uri = "";
 	    String comment;
@@ -1391,27 +1390,27 @@ public class RESTupServer {
 			String jobDefaults = eElement.getAttribute("jobDefaults");
 			comment = eElement.getTextContent().trim().replace("\r","");
 			if (!comment.isEmpty()) comment = "\n" + comment;
-                        File df = schemaFile(uri);		// папка сервиса
-	// создать дескриптор сервиса (имя_сервиса;параметр_задания)
+                        File df = schemaFile(uri);		// РїР°РїРєР° СЃРµСЂРІРёСЃР°
+	// СЃРѕР·РґР°С‚СЊ РґРµСЃРєСЂРёРїС‚РѕСЂ СЃРµСЂРІРёСЃР° (РёРјСЏ_СЃРµСЂРІРёСЃР°;РїР°СЂР°РјРµС‚СЂ_Р·Р°РґР°РЅРёСЏ)
 			if (serviceName != null && !serviceName.isEmpty()) {
-	// проверить наличие сервиса (нет - exception)
+	// РїСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ СЃРµСЂРІРёСЃР° (РЅРµС‚ - exception)
 			    FService service = getService(serviceName);
-// ??? если папка сервиса существует или папка-контейнер является сервисом - exception 
+// ??? РµСЃР»Рё РїР°РїРєР° СЃРµСЂРІРёСЃР° СЃСѓС‰РµСЃС‚РІСѓРµС‚ РёР»Рё РїР°РїРєР°-РєРѕРЅС‚РµР№РЅРµСЂ СЏРІР»СЏРµС‚СЃСЏ СЃРµСЂРІРёСЃРѕРј - exception 
 			    if (!df.exists()) {
 				(new File(df,this.resFolderName)).mkdirs(); 
 				(new File(df,this.jobFolderName)).mkdirs(); 
 			    };
 			    writeString(new File(df, DAV_DESCRIPTOR_NAME)
 				, serviceName + ";" + jobDefaults); 
-	// создать папку результатов в структуре сервисов
+	// СЃРѕР·РґР°С‚СЊ РїР°РїРєСѓ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ СЃРµСЂРІРёСЃРѕРІ
 //			    (new File(df, this.resFolderName)).mkdirs();	    
 		            System.out.println("\t " + uri + " OK");
-	// добавим в аннотацию разрешенные расширения файлов
+	// РґРѕР±Р°РІРёРј РІ Р°РЅРЅРѕС‚Р°С†РёСЋ СЂР°Р·СЂРµС€РµРЅРЅС‹Рµ СЂР°СЃС€РёСЂРµРЅРёСЏ С„Р°Р№Р»РѕРІ
 			    comment = " (" + 
 				(service.fileExts.isEmpty() ? "*" : service.fileExts.toLowerCase()) + 
 				")" + comment;
 			}
-	// создать аннотацию сервиса (удаляется после формирования help.html)
+	// СЃРѕР·РґР°С‚СЊ Р°РЅРЅРѕС‚Р°С†РёСЋ СЃРµСЂРІРёСЃР° (СѓРґР°Р»СЏРµС‚СЃСЏ РїРѕСЃР»Рµ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ help.html)
 			if (comment != null && !comment.isEmpty()) {
 			    if (!df.exists()) df.mkdirs();
  			    writeString(new File(df, DAV_ABSTRACT_NAME), DatatypeConverter.printString(comment)) ;
@@ -1421,24 +1420,23 @@ public class RESTupServer {
 		    System.err.println("\t " + uri + " Ignored");
 		}
 	    }
-	// сформировать файл справки
-	    File hf = new File(eRoot.getAttribute("helpFileTemplate"));
-	    makeHelpFile(schemaDir(), hf);
+	// 
+	    makeHelpFile(schemaDir(), new File(dRoot.getAttribute("helpFileTemplate")));
         }
-//
-	void makeHelpFile(File fs, File hf) {
-	//fs - папка схемы интерфейса; hf - шаблон файла справки
+//      
+	void makeHelpFile(File fs, File fh) {
+	//fs - root DAV schema folder; fh - external help template file
 	    String hName = "Help.txt";
 	    try {
-	    	String hText = (hf.exists() ? readString(hf)
+	    	String hText = (fh.exists() ? readString(fh)
 		    : readString( getClass().getResourceAsStream("/source/" + hName) ));
 		hText = hText.replace("%serverVersion%", SERVER_VERSION);	// 
-		hText = hText.replace("%outFilesFolder%", this.resFolderName);	// имя папки результата
-		hText = hText.replace("%inFilesFolder%", this.jobFolderName);	// имя папки файлов задания
+		hText = hText.replace("%outFilesFolder%", this.resFolderName);	// РёРјСЏ РїР°РїРєРё СЂРµР·СѓР»СЊС‚Р°С‚Р°
+		hText = hText.replace("%inFilesFolder%", this.jobFolderName);	// РёРјСЏ РїР°РїРєРё С„Р°Р№Р»РѕРІ Р·Р°РґР°РЅРёСЏ
 		hText = hText.replace("%sessionQuota%",
-		    String.format("%1$.1f",(double)sessionQuota/1048576L));	// дисковая квота (МиБ)
+		    String.format("%1$.1f",(double)sessionQuota/1048576L));	// РґРёСЃРєРѕРІР°СЏ РєРІРѕС‚Р° (РњРёР‘)
 		hText = hText.replace("%sessionTimeout%",
-		    String.format("%1$.1f",(double)sessionTimeout/60L));	// таймаут сессии (минут)
+		    String.format("%1$.1f",(double)sessionTimeout/60L));	// С‚Р°Р№РјР°СѓС‚ СЃРµСЃСЃРёРё (РјРёРЅСѓС‚)
 		String fList = makeFileList(fs, 0);
 		hText = hText.replace("%foldersTree%", fList );
 	    	writeString(new File(fs, hName), hText);
@@ -1478,9 +1476,9 @@ public class RESTupServer {
  *
  */
        class DSession {
-	    String id = "";		// идентификатор сессии
-	    String uid = "";		// идентификатор пользователя
-            volatile long accessed;	// время последнего обращения
+	    String id = "";		// РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё
+	    String uid = "";		// РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+            volatile long accessed;	// РІСЂРµРјСЏ РїРѕСЃР»РµРґРЅРµРіРѕ РѕР±СЂР°С‰РµРЅРёСЏ
 
             DSession() {
 	        this.id = Long.toHexString(UUID.randomUUID().getLeastSignificantBits());
@@ -1655,7 +1653,7 @@ public class RESTupServer {
 		  + "<D:response>"
 		    + "<D:href>" + this.davAbsoluteHref(uri) + "</D:href>"
 		    + "<D:propstat>"
-//!!! взять свойства из запроса?
+//!!! РІР·СЏС‚СЊ СЃРІРѕР№СЃС‚РІР° РёР· Р·Р°РїСЂРѕСЃР°?
 			+ "<D:prop><D:allprop/></D:prop>"
 			+ "<D:status>HTTP/1.1 403 Forbidden</D:status>"
 			+ "<D:error>D:cannot-modify-protected-property</D:error>"
@@ -1682,7 +1680,7 @@ public class RESTupServer {
 //  PUT
 	    public void put() throws Throwable {
 		if (!davCanWrite(this.uri)) throw new HttpException(403, "Forbidden");
-	// проверить на превышение квоты
+	// РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РїСЂРµРІС‹С€РµРЅРёРµ РєРІРѕС‚С‹
 		davFileExtensionCheck(this.uri);
 		davSessionQuotaCheck(request.getContentLength());
 		File dstFile = davSessionFile(this.uri);
@@ -1702,7 +1700,7 @@ public class RESTupServer {
 	    	File srcFile = davFile(this.uri);
 	    	if (!srcFile.exists()) throw new HttpException(404,"Not Found");
 		if (!davCanWrite(davDestinationUri())) throw new HttpException(403, "Forbidden");
-	// проверить на превышение квоты
+	// РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РїСЂРµРІС‹С€РµРЅРёРµ РєРІРѕС‚С‹
 		davSessionQuotaCheck(treeLength(srcFile));
 		davFileExtensionCheck(davDestinationUri());
 	    	File dstFile = davSessionFile(davDestinationUri());
@@ -1725,7 +1723,7 @@ public class RESTupServer {
 	    	File dstFile = davSessionFile(davDestinationUri());
 		if (!dstFile.getParentFile().exists()) dstFile.getParentFile().mkdirs(); 
 	    	if (!srcFile.renameTo(dstFile)) throw new HttpException(500,"Internal Server Error");
-/*	// проверить совпадение родительских папок, если совпадают - rename
+/*	// РїСЂРѕРІРµСЂРёС‚СЊ СЃРѕРІРїР°РґРµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РїР°РїРѕРє, РµСЃР»Рё СЃРѕРІРїР°РґР°СЋС‚ - rename
 	    	if (srcFile.getParent().equals(dstFile.getParent())) 
 		    srcFile.renameTo(dstFile);
 	    	else {
@@ -1807,7 +1805,7 @@ public class RESTupServer {
 		String descriptor[] = server.getServiceDescriptor(server.getServiceUri(uri));
 		if (descriptor == null) throw new HttpException(500, "Internal Server Error");
 		FService service = server.getService(descriptor[0]);
-	// допустимое расширение файла ? 
+	// РґРѕРїСѓСЃС‚РёРјРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ С„Р°Р№Р»Р° ? 
 		if (! service.fileExtAllowed( uri )) 
 //		    throw new HttpException(415, "Unsupported Media Type"); // MS Agent?
 		    throw new HttpException(409, "Forbidden");
@@ -1836,29 +1834,32 @@ public class RESTupServer {
             void davServiceExecute(String uri) throws Throwable {
 		File resDir = davSessionFile(uri); 
 		File jobDir = new File(resDir.getParentFile(), server.jobFolderName);
-	// получить дескриптор DAV сервиса
+	// РїРѕР»СѓС‡РёС‚СЊ РґРµСЃРєСЂРёРїС‚РѕСЂ DAV СЃРµСЂРІРёСЃР°
 		File svcDir = server.schemaFile(uri).getParentFile();
 		String descriptor[] = server.getServiceDescriptor(svcDir);
 		if (descriptor == null) throw new HttpException(500, "Internal Server Error");
 		FService service = server.getService(descriptor[0]);
 		if (!jobDir.exists() && service.jobQuota > 0) return;
-	// набор исходных файлов изменен?
+	// РЅР°Р±РѕСЂ РёСЃС…РѕРґРЅС‹С… С„Р°Р№Р»РѕРІ РёР·РјРµРЅРµРЅ?
 		if (jobDir.exists() && resDir.exists() && jobDir.lastModified() > resDir.lastModified()) 
 		    rmTree(resDir);
-	// уже преобразовано?
+	// СѓР¶Рµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРѕ?
 		if (resDir.isDirectory() && resDir.listFiles().length > 0) return;
-	// создать задание сервису
+	// СЃРѕР·РґР°С‚СЊ Р·Р°РґР°РЅРёРµ СЃРµСЂРІРёСЃСѓ
 		FJob job = this.server.getService(descriptor[0]).createJob();
 		job.size = treeLength(jobDir);
-	// стартовать задание, ждать завершения
+	// СЃС‚Р°СЂС‚РѕРІР°С‚СЊ Р·Р°РґР°РЅРёРµ, Р¶РґР°С‚СЊ Р·Р°РІРµСЂС€РµРЅРёСЏ
 		resDir.mkdirs();
 		Throwable th = null;
 		try {
 		    job.run(jobDir, resDir, descriptor[1]);
-		    rmTree(jobDir);	// удалить файлы задания
+		    rmTree(jobDir);	// СѓРґР°Р»РёС‚СЊ С„Р°Р№Р»С‹ Р·Р°РґР°РЅРёСЏ
 		} catch (Throwable te) {
-		    rmTree(resDir);     // удалить результат
-		    th = te;
+//		    rmTree(resDir);     // СѓРґР°Р»РёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚
+                    writeString(new File(resDir,"Oops! Internal Server Error"),"");
+//                    th = te;
+                    th = new HttpException(503, "Service Unavaliable");
+                    th = new HttpException(404, "Not Found");
 		} finally {
 		    this.server.getService(descriptor[0]).deleteJob(job.id); 
 		};
@@ -1866,19 +1867,19 @@ public class RESTupServer {
 	    }
 // 
 	    File[] listDavFiles(String uri) throws Throwable {
-		File[] fileList = this.server.schemaFile(uri).listFiles(); // DAV схема;
+		File[] fileList = this.server.schemaFile(uri).listFiles(); // DAV СЃС…РµРјР°;
 		if (this.session == null) return fileList;    		// 
 		if (this.server.isResFolder(uri)) {
-	// запрошен файл в папкe результатов преобразования
+	// Р·Р°РїСЂРѕС€РµРЅ С„Р°Р№Р» РІ РїР°РїРєe СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
 		    davServiceExecute(uri);
 		    if (davSessionFile(uri).exists()) return davSessionFile(uri).listFiles();
 		    return fileList; 
 		}
-	// объединить содержимое файлов сессии и DAV схемы
+	// РѕР±СЉРµРґРёРЅРёС‚СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»РѕРІ СЃРµСЃСЃРёРё Рё DAV СЃС…РµРјС‹
 		Vector<File> fileVector = new Vector<File>();
 		for (int i = 0; fileList != null && i < fileList.length; i++) 
 		    fileVector.addElement(fileList[i]);
-	        fileList = davSessionFile(uri).listFiles(); 		// сессия
+	        fileList = davSessionFile(uri).listFiles(); 		// СЃРµСЃСЃРёСЏ
 		for (int i = 0; fileList != null && i < fileList.length; i++)
 		    if (!(new File(this.server.schemaFile(uri), fileList[i].getName())).exists())
 			fileVector.addElement(fileList[i]);
@@ -1888,10 +1889,10 @@ public class RESTupServer {
 	    }
 	}
 //
-//  WebDAV интерфейс
+//  WebDAV РёРЅС‚РµСЂС„РµР№СЃ
 //
 	FAction[] interfaceActions = {
-	// WebDAV redirect на корень сервера
+	// WebDAV redirect РЅР° РєРѕСЂРµРЅСЊ СЃРµСЂРІРµСЂР°
 	    new FAction("(?:OPTIONS|PROPFIND) (?:" + SERVER_ROOT + "[/]?|/) [^$]+"
 		, new Executor() { public void execute(HttpRequest rq, HttpResponse rs, FServer fs) throws Throwable {
 		    rq.getContent("utf-8");   // debug
