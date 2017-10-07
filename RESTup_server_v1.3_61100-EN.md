@@ -271,7 +271,7 @@ Debug echo service.
 | sessionQuota | limit the total files size of bytes (2 gigabytes) |
 | inFolderName | the name of the job files folder ("in") |
 | outFolderName | the name of the result files folder ("out") |
-| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Help-en.txt](https://github.com/miktim/RESTup/blob/master/Source/Help-en.txt)|
+| helpFileTemplate | help template file (built-in). The text file (utf-8 + BOM) contains macros enclosed by %.<br>See [./Help-en.txt](https://github.com/miktim/RESTup/blob/master/Help-en.txt)|
 
 5.1.2 WebDAV Servce Folder Options:
 
