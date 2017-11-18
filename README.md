@@ -1,4 +1,4 @@
-### RESTup. RESTful java-server of console applications. Version 1.3.61110
+### RESTup. RESTful java-server of console applications. Version 1.3
 
 #### 1. Purpose
 
