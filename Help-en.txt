@@ -4,9 +4,10 @@
 The principle of the interface:
  - select the service folder;
  - copy the source files to the "%inFilesFolder%" subfolder;
- - return the result from the subfolder "%outFilesFolder%",
-   in some cases it is necessary to update its contents.
-
+ - return the result from the subfolder "%outFilesFolder%".
+   For some WebDAV clients it is necessary to update its contents manually.
+   If an error occurred, the file "Oops! Internal Server Error" is created.
+ 
 The total size of your files is limited to %sessionQuota% MiB, 
 and the storage time is %sessionTimeout% min.
 
@@ -16,4 +17,4 @@ For them, valid extensions (types) of source files are specified,
 Folders marked with "-" are used for grouping purposes and are read-only.
 
 %foldersTree%
-2015, miktim@mail.ru  Translated by Google®.
+2015-2017, miktim@mail.ru  Translated with Google®.
