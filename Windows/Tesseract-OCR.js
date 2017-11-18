@@ -1,8 +1,8 @@
-// RESTup. RESTful сервис консольных приложений
-// 2013-2015, miktim@mail.ru
-// ќптический распознаватель символов Tesseract:
+// RESTup. RESTful server
+// 2013-2017, miktim@mail.ru
+// Optical character recognizer Tesseract:
 //    https://code.google.com/p/tesseract-ocr/
-// запуск: cscript /nologo [selfdir]\OCRTesseract.js jobdir resdir [params]
+// Usage: cscript /nologo [selfdir]\OCRTesseract.js jobdir resdir [params]
 //
 try {
 //
@@ -12,12 +12,12 @@ try {
 //
 //    var servicename="OCRTesseract";
     var retcode=0;
-    var jobdir = WScript.Arguments.item(0); // папка файлов задани€ (.JPG,.JPEG,...)
-    var repdir = WScript.Arguments.item(1); // папка результатов (.TXT UTF-8)
+    var jobdir = WScript.Arguments.item(0); // job file(s) folder (.JPG,.JPEG,...)
+    var repdir = WScript.Arguments.item(1); // result file(s) folder (.TXT UTF-8)
     var language = "rus";
     if (WScript.Arguments.Count() > 2) language = WScript.Arguments.item(2); 
 //
-// вызвать OCR дл€ файлов задани€. 
+// Call OCR. 
 //
     var filescol = new Enumerator(fso.GetFolder(jobdir).Files);
     for (; !filescol.atEnd(); filescol.moveNext()) 
@@ -32,10 +32,10 @@ try {
 	if (retcode != 0 ) throw retcode;
     };
 //
-// обработка ошибок
+// exception?
 //
 } catch (err) {
-    if (retcode == 0) retcode=1;	// ошибка скрипта
+    if (retcode == 0) retcode=1;	// script error
 };
 // эмул€ци€ таймаута
 // WScript.Sleep(30000); 
