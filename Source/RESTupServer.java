@@ -580,7 +580,7 @@ public class RESTupServer {
 
 //
     class FServer {
-	public static final String SERVER_VERSION = "RESTup/1.3.0.61100";
+	public static final String SERVER_VERSION = "RESTup/1.3.0.71100";
 	public static final String SERVER_ROOT = "/restup";
 /**
  *  Расширение класса листенера методом обслуживания http-запросов сервера
@@ -1122,7 +1122,7 @@ public class RESTupServer {
 	    return null;	 
 	}
 // Проверка кода возврата внешней программы
-        public void checkExitVal() throws Throwable {
+        public void checkExitVal() throws HttpException {
 	    if (this.started == 0) throw new HttpException(409,"Conflict");	// Job Not Started  
 	    if (this.ended == 0) throw new HttpException(409,"Conflict");	// Job Not Ended
 	    if (this.exitVal == -2) throw new HttpException(500,"Internal Server Error"); // Service Failed (can't run)
@@ -1133,7 +1133,7 @@ public class RESTupServer {
 	public void run(String params) throws Throwable {
 	    this.run(this.jobFilesDir(), this.resFilesDir(), params);
 	}
-	public synchronized void run(File jobFiles, File resFiles, String params) throws Throwable {
+	public synchronized void run(File jobFiles, File resFiles, String params) throws HttpException { //Throwable {
 	// задание завершено? 
 	    if (this.ended != 0) checkExitVal();
 	// задание уже запущено? - ошибка
@@ -1168,8 +1168,8 @@ public class RESTupServer {
 	    // ожидание завершения внешней программы
 		this.exitVal = this.wait(this.service.jobProcessTimeOut);
 	    } catch (Throwable thr) {
-		th = thr;
-	    };
+                th = thr;
+            };
 	// уменьшим счетчик запущенных заданий
 	    this.service.server.jobEnded();
 //http://stackoverflow.com/questions/14542448/capture-the-output-of-an-external-program-in-java
@@ -1182,7 +1182,9 @@ public class RESTupServer {
 		if (th != null) th.printStackTrace(dbg);
 		else {
 		    String line;
-		    while ((line = bri.readLine()) != null) dbg.println(line);
+                    try {
+		        while ((line = bri.readLine()) != null) dbg.println(line);
+                    } catch (Exception ex) { };
 		}
 	    }
 	// удалить исходные файл(ы) задания 
@@ -1807,8 +1809,8 @@ public class RESTupServer {
 		FService service = server.getService(descriptor[0]);
 	// допустимое расширение файла ? 
 		if (! service.fileExtAllowed( uri )) 
-//		    throw new HttpException(415, "Unsupported Media Type"); // MS Agent?
-		    throw new HttpException(409, "Forbidden");
+		    throw new HttpException(415, "Unsupported Media Type"); // MS Agent?
+//		    throw new HttpException(409, "Forbidden");
 	    }
 //
 	    boolean davCanDelete(String uri) {
@@ -1831,7 +1833,8 @@ public class RESTupServer {
 		return treeLength(davSessionFile(""));
 	    }
 // 
-            void davServiceExecute(String uri) throws Throwable {
+            void restServiceExecute(String uri) throws Throwable {
+                String ERR_FILE_NAME = "Oops! Internal Server Error";
 		File resDir = davSessionFile(uri); 
 		File jobDir = new File(resDir.getParentFile(), server.jobFolderName);
 	// получить дескриптор DAV сервиса
@@ -1839,31 +1842,34 @@ public class RESTupServer {
 		String descriptor[] = server.getServiceDescriptor(svcDir);
 		if (descriptor == null) throw new HttpException(500, "Internal Server Error");
 		FService service = server.getService(descriptor[0]);
-		if (!jobDir.exists() && service.jobQuota > 0) return;
+		if (!jobDir.isDirectory() && service.jobQuota > 0) return;
 	// набор исходных файлов изменен?
-		if (jobDir.exists() && resDir.exists() && jobDir.lastModified() > resDir.lastModified()) 
-		    rmTree(resDir);
-	// уже преобразовано?
-		if (resDir.isDirectory() && resDir.listFiles().length > 0) return;
+//		if (jobDir.exists() && resDir.exists() && jobDir.lastModified() > resDir.lastModified()) { 
+		if (jobDir.isDirectory() && resDir.isDirectory() && jobDir.lastModified() > resDir.lastModified()) { 
+                    rmTree(resDir);
+                }
+	// задание уже выполнено?
+		if (resDir.isDirectory() && resDir.listFiles().length > 0) {
+//                    if ((new File(resDir, ERR_FILE_NAME)).exists()) { 
+//                        throw new HttpException(500,"Internal Server Error");
+//                    } else { return; }
+                    return;
+                }
 	// создать задание сервису
 		FJob job = this.server.getService(descriptor[0]).createJob();
 		job.size = treeLength(jobDir);
 	// стартовать задание, ждать завершения
 		resDir.mkdirs();
-		Throwable th = null;
 		try {
 		    job.run(jobDir, resDir, descriptor[1]);
 		    rmTree(jobDir);	// удалить файлы задания
-		} catch (Throwable te) {
-//		    rmTree(resDir);     // удалить результат
-                    writeString(new File(resDir,"Oops! Internal Server Error"),"");
-//                    th = te;
-                    th = new HttpException(503, "Service Unavaliable");
-                    th = new HttpException(404, "Not Found");
+		} catch (HttpException he) {
+                    writeString(new File(resDir,ERR_FILE_NAME),"");
+// MS agent!!!
+//                    throw new HttpException(500, "Internal Server Error");
 		} finally {
 		    this.server.getService(descriptor[0]).deleteJob(job.id); 
 		};
-		if (th != null) throw th;
 	    }
 // 
 	    File[] listDavFiles(String uri) throws Throwable {
@@ -1871,7 +1877,7 @@ public class RESTupServer {
 		if (this.session == null) return fileList;    		// 
 		if (this.server.isResFolder(uri)) {
 	// запрошен файл в папкe результатов преобразования
-		    davServiceExecute(uri);
+		    restServiceExecute(uri);
 		    if (davSessionFile(uri).exists()) return davSessionFile(uri).listFiles();
 		    return fileList; 
 		}
@@ -1974,3 +1980,4 @@ public class RESTupServer {
 	};
     }
 }
+
