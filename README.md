@@ -56,8 +56,8 @@ Text of the 'service' node contains abstract.
 **2.3 PRE-Configured services (may vary)**
 
 The configuration files (Linux/Windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
-- LibreOffice (4.2 for Windows .js): http://libreoffice.org/ ;
-- Tesseract-OCR: https://code.google.com/p/tesseract-ocr/ .
+- LibreOffice (5.x for Windows .js): http://libreoffice.org/ ;
+- Tesseract-OCR and langdata: https://code.google.com/p/tesseract-ocr/ .
 
 | Service name | Abstract |
 | --- | --- |
@@ -311,7 +311,7 @@ openSUSE KDE Dolphin, Konqueror:
   in the address bar enter 'webdav://<host>[:<port>]/restup/dav'
 ```
 **NOTES:**<br>
-1. Windows XP, Vista does not allow port 80 override;<br>
+1. Windows XP does not allow port 80 override;<br>
 2. Port 80 Windows 10 can be busy with the W3SVC (World Wide Web Publishing Service) service;<br> 
 3. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
