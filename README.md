@@ -3,6 +3,11 @@
 #### 1. Purpose
 
 RESTup - JavaSE/6 HTTP server provides the RESTful API to the operating system console applications (hereinafter referred to as services).
+
+The server has an experimental user interface (UI) based on the WebDAV protocol.
+
+#### 2. HTTP RESTful API
+
 The following general pattern is used to communicate with the server:
 - get the list of services (GET), define service URI;
 - create a service job (POST), get the URI for the job files;
@@ -12,85 +17,11 @@ The following general pattern is used to communicate with the server:
 - get the result file(s) (GET);
 - delete the job and associated files (DELETE).
 
-The server has an experimental user interface (UI) based on the WebDAV protocol.
-
-#### 2. Configuring the server
-
-The server configuration is stored in the RESTupConfig.xml file, which is taken at startup from the current directory. Attribute names are case sensitive. Attribute values and their relationship are not controlled. The values of the spoolDir, jobCommand attributes depend on the runtime (Linux / Windows). The following is an example for the Windows platform:
-
-```xml 
-<?xml version = "1.0" encoding = "Windows-1251"?>
-<server port = "8080" maxJobsStarted = "4" jobsLifeTime = "240" debugLevel = "0">
-<service name = "Echo"
-jobCommand = "CMD /C xcopy %inFilesDir%%jobParams% %outFilesDir% /E /Y /Q"
-fileExts = "" debug = "off" jobDefaults = "*.*" jobQuota = "500000" commandTimeout = "10">
-Echo service. Returns the job file(s) by the mask defined by the job parameter.
-</service>
-</server>
-```
-**2.1 Server parameters (default values are given in brackets):**
-
-| Parameter | Description |
-| --- | --- |
-| port | port number of the listener (80). Listener listens to all available interfaces.<br>port = "1935", in case of port forwarding by the Linux command:<br> ``` sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 1935 ``` |
-| spoolDir | the directory of the job files (the subdirectory restup_spool of the temporary files directory of the system). <br>Avoid spaces in the full path to the job directory!|
-| jobsLifeTime | the lifetime of jobs since creation in seconds (240). After the specified time, the job and the associated files are deleted.|
-| maxJobsStarted | the maximum number of executable external programs (2). If the number of executable external programs exceeds the allowable value, the job is queued for a time: <br>jobsLifeTime - commandTimeout - time_since_creation<br>after which it is deleted.|
-| debugLevel | The level of detail of debug information that is output to the console: 0 - 2 (1). |
-
-
-**2.2 Service parameters:**
-
-| Parameter | Description |
-| --- | --- |
-| name | unique service name (required) |
-| fileExts | allowed file extensions, separated by commas (any, including the creation of subdirectories)|
-| debug | output to console service debug information: on / (off)|
-| jobQuota | the maximum size of the job files in bytes (without restrictions) |
-| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> %inFilesDir% - full path to the job directory;<br>%outFilesDir% - full path to the directory of result files;<br>%jobParams%  - custom job parameters. |
-| jobDefaults | default job parameters (no)|
-| commandTimeout | the maximum execution time of the external job program in seconds (60).|
-
-Text of the 'service' node contains abstract.
-
-**2.3 PRE-Configured services (may vary)**
-
-The configuration files (Linux/Windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
-- LibreOffice (5.x for Windows .js): http://libreoffice.org/ ;
-- Tesseract-OCR and langdata: https://code.google.com/p/tesseract-ocr/ .
-
-| Service name | Abstract |
-| --- | --- |
-| Office2pdf | Convert office documents to Adobe PDF format |
-| Office2html | Convert office documents to html |
-| Office2ooxml | Convert office documents (ODF) to MS Office 2007 (OOXML) |
-| Office2mso97 | Convert office documents (ODF) to MS Office 97 |
-| Tesseract-OCR | Optical Text Recognition (OCR) |
-| Echo | Debug echo service. Returns the job file(s) by the user-defined mask |
-	
-#### 3. Starting the server
-
-The server requires JavaSE jre or openJDK runtime 1.6 or later. Console command:
-
-```java [-Dkey=value] -jar [path]RESTupServer.jar```
-
-Default keys and values:
-
-| Key | Value |
-| --- | --- |
-| consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
-| davEnable | Enables / disables the WebDAV interface: yes/(no) |
-
-You can check the server's availability and health by using any WEB browser by typing in the address bar:<br>
-http://\<host\>:\<port\>/restup
-
-#### 4. HTTP RESTful API
-
-API implements the actions listed in Clause 1. The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with server is done in UTF-8 encoding. Returned success codes: 200, 201, 204.
+The parameters are passed by the uri, the header fields and the request body. Values are returned in the response header fields and response body. Exchange with server is done in UTF-8 encoding. Returned success codes: 200, 201, 204.
 
 If the Host field is missing from the client request header, Error 400 (Bad Request) is returned. The URL of the request is validated against the top-level link ("dot-dot"). 
 
-**4.1 Get a list of services**
+**2.1 Get a list of services**
 
 Client Request:
 ```HTTP 
@@ -123,7 +54,7 @@ Content-Length: xxxxx
 </restup>
 ```
 
-**4.2 Create a job for the service, get the URI for the job files.**
+**2.2 Create a job for the service, get the URI for the job files.**
 
 Client Request:
 ```HTTP
@@ -140,7 +71,7 @@ Location: http://localhost:8080/restup/echo/add03ead02c9bec8/in
 Content-Length: 0
 
 ```
-**4.3 Put job file**
+**2.3 Put job file**
 
 Client Request:
 ```HTTP
@@ -157,7 +88,7 @@ HTTP/1.1 204 No Content
 ...
 Content-Length: 0
 ```
-**4.4 Execute the job, get the URI of the result files.**
+**2.4 Execute the job, get the URI of the result files.**
 
 In the body of the request, you can specify a string of user-defined service-depended job parameters. User-defined job parameter is checked for CR, LF and command continuation characters. Server waits for job completion, then delete job files and return uri of result files.
 
@@ -177,7 +108,7 @@ HTTP/1.1 201 Created
 Location: http://localhost:8080/restup/echo/add03ead02c9bec8/out/
 Content-Length: 0
 ```
-**4.5 Get a list of result files.**
+**2.5 Get a list of result files.**
 
 Client Request:
 ```HTTP
@@ -203,7 +134,7 @@ Content-Length: xxxxx
 ...
 </restup_out>
 ```
-**4.6 Get the result file.**
+**2.6 Get the result file.**
 
 Client Request:
 ```HTTP
@@ -220,7 +151,7 @@ Content-Length: xxxxx
 
 binary file content
 ```
-**4.7 Delete the job.**
+**2.7 Delete the job.**
 
 Client Request:
 ```HTTP
@@ -234,6 +165,79 @@ HTTP/1.1 204 No Content
 ...
 Content-Length: 0
 ```
+
+#### 3. Configuring the server
+
+The server configuration is stored in the RESTupConfig.xml file, which is taken at startup from the current directory. Attribute names are case sensitive. Attribute values and their relationship are not controlled. The values of the spoolDir, jobCommand attributes depend on the runtime (Linux / Windows). The following is an example for the Windows platform:
+
+```xml 
+<?xml version = "1.0" encoding = "Windows-1251"?>
+<server port = "8080" maxJobsStarted = "4" jobsLifeTime = "240" debugLevel = "0">
+<service name = "Echo"
+jobCommand = "CMD /C xcopy %inFilesDir%%jobParams% %outFilesDir% /E /Y /Q"
+fileExts = "" debug = "off" jobDefaults = "*.*" jobQuota = "500000" commandTimeout = "10">
+Echo service. Returns the job file(s) by the mask defined by the job parameter.
+</service>
+</server>
+```
+**3.1 Server parameters (default values are given in brackets):**
+
+| Parameter | Description |
+| --- | --- |
+| port | port number of the listener (80). Listener listens to all available interfaces. |
+| spoolDir | the directory of the job files (the subdirectory restup_spool of the temporary files directory of the system). <br>Avoid spaces in the full path to the job directory!|
+| jobsLifeTime | the lifetime of jobs since creation in seconds (240). After the specified time, the job and the associated files are deleted.|
+| maxJobsStarted | the maximum number of executable external programs (2). If the number of executable external programs exceeds the allowable value, the job is queued for a time: <br>jobsLifeTime - commandTimeout - time_since_creation<br>after which it is deleted.|
+| debugLevel | The level of detail of debug information that is output to the console: 0 - 2 (1). |
+
+**NOTES:**<br>
+1. Port 80 Windows 10 can be busy with the W3SVC (World Wide Web Publishing Service) service;<br> 
+2. Parameter port = "1935", in case of port forwarding by the Linux command:<br> ``` sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 1935 ```
+
+**3.2 Service parameters:**
+
+| Parameter | Description |
+| --- | --- |
+| name | unique service name (required) |
+| fileExts | allowed file extensions, separated by commas (any, including the creation of subdirectories)|
+| debug | output to console service debug information: on / (off)|
+| jobQuota | the maximum size of the job files in bytes (without restrictions) |
+| jobCommand | executable external command (required). The command uses macro substitutions (paths with trailing separator):<br> %inFilesDir% - full path to the job directory;<br>%outFilesDir% - full path to the directory of result files;<br>%jobParams%  - custom job parameters. |
+| jobDefaults | default job parameters (no)|
+| commandTimeout | the maximum execution time of the external job program in seconds (60).|
+
+Text of the 'service' node contains abstract.
+
+**3.3 PRE-Configured services (may vary)**
+
+The configuration files (Linux/Windows) contain examples of services that are based on free software, which in turn must be pre-installed 'by default':
+- LibreOffice (5.x for Windows .js): http://libreoffice.org/ ;
+- Tesseract-OCR and langdata: https://code.google.com/p/tesseract-ocr/ .
+
+| Service name | Abstract |
+| --- | --- |
+| Office2pdf | Convert office documents to Adobe PDF format |
+| Office2html | Convert office documents to html |
+| Office2ooxml | Convert office documents (ODF) to MS Office 2007 (OOXML) |
+| Office2mso97 | Convert office documents (ODF) to MS Office 97 |
+| Tesseract-OCR | Optical Text Recognition (OCR) |
+| Echo | Debug echo service. Returns the job file(s) by the user-defined mask |
+	
+#### 4. Starting the server
+
+The server requires JavaSE jre or openJDK runtime 1.6 or later. Console command:
+
+```java [-Dkey=value] -jar [path]RESTupServer.jar```
+
+Default keys and values:
+
+| Key | Value |
+| --- | --- |
+| consoleEncoding | encoding output to the console (utf-8). The Windows console uses DOS encoding. For example: -DconsoleEncoding=cp866 |
+| davEnable | Enables / disables the WebDAV interface: yes/(no) |
+
+You can check the server's availability and health by using any WEB browser by typing in the address bar:<br>
+http://\<host\>:\<port\>/restup
 
 #### 5. WebDAV user interface (experiment)
 
@@ -311,9 +315,8 @@ openSUSE KDE Dolphin, Konqueror:
   in the address bar enter 'webdav://<host>[:<port>]/restup/dav'
 ```
 **NOTES:**<br>
-1. Windows XP does not allow port 80 override;<br>
-2. Port 80 Windows 10 can be busy with the W3SVC (World Wide Web Publishing Service) service;<br> 
-3. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
+1. Windows XP Explorer does not allow port 80 override;<br>
+2. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
 
