@@ -249,7 +249,7 @@ The user interface is based on WebDAV class 1 protocol. The interface is a set o
 
 Information about the connected services and the limitations of the user session is found in the help file of the root folder.
 
-**IMPORTANT:** in this version, the user is identified by an IP or host name or a combination of X-Forwarded-For + Via request header values.
+**WARNING:** this version of the server identificates the user by an IP or host name or a combination of X-Forwarded-For + Via request header values.
 
 **5.1 Configuring the WebDAV server interface.**
 
