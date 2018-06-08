@@ -316,7 +316,7 @@ openSUSE KDE Dolphin, Konqueror:
 ```
 **NOTES:**<br>
 1. Windows XP does not allow port 80 override;<br>
-2. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
+2. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual folder refresh is required.
 
 #### 6. Agents
 
