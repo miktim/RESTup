@@ -293,7 +293,7 @@ Text of the 'folder' node contains abstract.
 
 ```
 Windows: 
-  C:>net use <drive_letter:> \\<host>[:<port>]\restup\dav
+  C:>net use <drive_letter:> \\<host>[@<port>]\restup\dav
 
 Ubuntu:
   $ sudo mount -t davfs -o rw,guid=users http://<host>[:<port>]/restup/dav <mount_point>
@@ -306,7 +306,7 @@ openSUSE:
 
 ```
 Windows Explorer:
-  map network drive to '\\<host>[:<port>]\restup\dav'
+  map network drive to '\\<host>[@<port>]\restup\dav'
   
 Ubuntu Gnome Nautilus:
   connect to server 'dav://<host>[:<port>]/restup/dav'
@@ -315,7 +315,7 @@ openSUSE KDE Dolphin, Konqueror:
   in the address bar enter 'webdav://<host>[:<port>]/restup/dav'
 ```
 **NOTES:**<br>
-1. Windows XP Explorer does not allow port 80 override;<br>
+1. Windows XP does not allow port 80 override;<br>
 2. File managers cache the contents of remote folders. In some cases (Dolphin, Konqueror), a forced manual update is required.
 
 #### 6. Agents
