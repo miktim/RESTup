@@ -1,3 +1,5 @@
+- !!!replace javax.xml.bind.DatatypeConverter.printHexBinary()
+- dumb code. Will be refactored this summer. 
 .61111
 +  Sec: check ../ in URL and job parameters;
 +  java agent added, oracle package renamed;
